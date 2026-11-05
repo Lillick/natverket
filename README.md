@@ -1,7 +1,18 @@
-# NÄTVERKET – första samlade testversionen
+# NÄTVERKET – MVP
 
-Lägg `index.html` i roten av ett GitHub-repository och importera repot i Vercel. Välj Framework Preset **Other**. Ingen build command behövs.
+NÄTVERKET är en tidig webb-MVP med publik informationssida och separat administratörsvy.
 
-Öppna webbplatsen, ange Supabase Project URL och den publika anon/publishable key och logga in med admin-kontot.
+## Lokal struktur
+- `index.html` – publik webbplats och admin-MVP.
+- `supabase/SECURITY_AUDIT.sql` – read-only SQL-kontroller av RLS, policyer, funktioner och privilegier.
+- `docs/LAUNCH_CHECKLIST.md` – lanserings- och dataskyddskrav.
 
-**Viktigt:** använd aldrig `service_role`-nyckeln i webbläsaren. Använd endast testdata tills RLS, behörigheter och dataskydd har granskats. Detta är en tidig MVP, inte en färdig produktionslösning. Matchning kör den befintliga funktionen `generate_request_matches`.
+## Drift
+Projektet är en statisk webbplats och kan publiceras via Vercel från GitHub. Ingen byggprocess krävs.
+
+Admin nås via `/?admin=1`. Anslut med Supabase Project URL och endast projektets publika anon/publishable key. Använd aldrig service_role i webbläsaren.
+
+## Nuvarande begränsningar
+Publika formulär är avsiktligt inte aktiverade. Det finns ännu ingen verifierad server-side intake-funktion, spambegränsning eller färdig GDPR-process. Den befintliga admin-MVP:n är inte i sig ett produktionsgodkännande.
+
+Se `docs/LAUNCH_CHECKLIST.md` innan riktiga personuppgifter eller externa användare tas in.
