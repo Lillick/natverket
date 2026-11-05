@@ -1,7 +1,8 @@
--- NÄTVERKET: read-only security audit for Supabase
--- Run in Supabase SQL Editor. This query does not modify data or policies.
+-- NÄTVERKET – read-only security audit
+-- Kör i Supabase SQL Editor. Detta granskar status men ändrar INTE databasen.
+-- Spara resultatet och granska innan riktiga personuppgifter läggs in.
 
--- 1) All tables in public schema and whether Row Level Security is enabled/forced.
+-- 1. Tabeller och om RLS är aktiverat
 select
   n.nspname as schema_name,
   c.relname as table_name,
@@ -10,10 +11,10 @@ select
 from pg_class c
 join pg_namespace n on n.oid = c.relnamespace
 where n.nspname = 'public'
-  and c.relkind in ('r','p')
+  and c.relkind = 'r'
 order by c.relname;
 
--- 2) Existing RLS policies and their roles/conditions.
+-- 2. Befintliga RLS-policyer
 select
   schemaname,
   tablename,
@@ -21,42 +22,43 @@ select
   permissive,
   roles,
   cmd,
-  qual as using_expression,
+  qual,
   with_check
 from pg_policies
 where schemaname = 'public'
 order by tablename, policyname;
 
--- 3) SECURITY DEFINER routines. Review every result manually.
+-- 3. Funktioner med SECURITY DEFINER (måste granskas manuellt)
 select
   n.nspname as schema_name,
   p.proname as function_name,
   pg_get_function_identity_arguments(p.oid) as arguments,
   p.prosecdef as security_definer,
-  p.proconfig as function_settings,
-  pg_get_userbyid(p.proowner) as owner,
-  p.proacl as access_control
+  p.proconfig as function_settings
 from pg_proc p
 join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public'
-  and p.prosecdef = true
 order by p.proname;
 
--- 4) Explicit grants to anon/authenticated on public tables/views.
+-- 4. Privilegier för anon/authenticated på tabeller i public
 select
+  grantee,
   table_schema,
   table_name,
-  grantee,
   privilege_type
 from information_schema.role_table_grants
 where table_schema = 'public'
-  and grantee in ('anon','authenticated')
+  and grantee in ('anon', 'authenticated')
 order by table_name, grantee, privilege_type;
 
--- 5) Views in public schema (review whether they expose personal data).
+-- 5. Kontrollera att känsliga tabeller inte kan nås av anon
+-- Resultatet är en granskningslista, inte ett automatiskt godkännande.
 select
-  table_name,
-  view_definition
-from information_schema.views
-where table_schema = 'public'
-order by table_name;
+  t.table_name,
+  bool_or(g.grantee = 'anon' and g.privilege_type in ('SELECT','INSERT','UPDATE','DELETE')) as anon_has_table_privilege
+from information_schema.tables t
+left join information_schema.role_table_grants g
+  on g.table_schema = t.table_schema and g.table_name = t.table_name
+where t.table_schema = 'public' and t.table_type = 'BASE TABLE'
+group by t.table_name
+order by t.table_name;
