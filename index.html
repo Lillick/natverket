@@ -153,6 +153,27 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 #foretag article.category-card:after{content:'Utforska och skicka förfrågan →';display:block;margin-top:16px;color:#087f78;font-size:13px;font-weight:800}
 .category-selection-note{color:#087f78;font-weight:700;font-size:13px}
 @media(prefers-reduced-motion:reduce){#behov details[open] .card-expanded{animation:none}}
+
+/* UX-förbättringar: tydliga klickytor, sökbar kategoriväg och mobilvänliga mål */
+html{scroll-behavior:smooth;scroll-padding-top:22px}
+:where(a,button,summary,[role="button"],input,select,textarea):focus-visible{outline:3px solid #f4b942!important;outline-offset:3px}
+.public-actions a,.nav-cta{min-height:48px;display:inline-flex;flex-direction:column;justify-content:center;gap:3px}
+.visual-card{min-height:220px;cursor:pointer}
+.visual-card:focus-visible{outline:4px solid #f4b942;outline-offset:4px}
+.visual-card .arrow{pointer-events:none}
+.audience-card summary{min-height:48px}
+#foretag article.category-card{cursor:pointer;position:relative;transition:transform .18s,border-color .18s,box-shadow .18s}
+#foretag article.category-card:after{content:'Utforska och skicka förfrågan →';display:block;margin-top:15px;color:#087f78;font-size:13px;font-weight:800}
+#foretag article.category-card:hover{transform:translateY(-3px);border-color:#73c9c0;box-shadow:0 12px 28px #10243b18}
+#foretag article.category-card:focus-visible{outline:3px solid #f4b942;outline-offset:3px}
+.category-search{display:flex;align-items:center;gap:12px;margin:22px 0 8px;padding:12px 16px;background:#fff;border:1px solid #dce5ee;border-radius:14px;box-shadow:0 5px 16px #10243b08}
+.category-search span{font-size:20px}
+.category-search input{border:0!important;box-shadow:none!important;margin:0;padding:9px 2px;min-width:0;font-size:16px}
+.category-search input:focus-visible{outline:2px solid #087f78!important;outline-offset:2px}
+.category-search-count{font-size:12px;color:#607386;white-space:nowrap}
+.category-empty{padding:18px;background:#fff;border:1px dashed #aabac8;border-radius:12px;color:#52657a;margin-top:12px}
+@media(max-width:600px){.visual-card{min-height:178px}.category-search{gap:8px;padding:10px 12px}.category-search-count{font-size:11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style></head><body><header><div class="brand"><div class="brand-mark">N</div><div><div class="brand-name">NÄTVERKET</div><div class="brand-sub">En plattform. Fler möjligheter.</div></div></div></header><main>
 <section id="public-home" class="public-wrap">
 <nav class="public-nav" aria-label="Huvudmeny"><a class="nav-home" href="#public-home" aria-label="NÄTVERKET startsida">NÄTVERKET</a><div class="navlinks"><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#live">Möjligheter</a><a href="#sa-fungerar">Så fungerar det</a></div><a class="nav-cta" href="#behov">Kom igång</a></nav>
@@ -192,7 +213,8 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 <section class="public-section" id="tjanster">
 <div class="public-kicker">UPPTÄCK NÄTVERKET</div><h2>Vad vill du hitta hjälp med?</h2>
 <p class="public-intro">Välj ett område och upptäck människor, tjänster och möjligheter. Vi hjälper dig från första frågan till rätt kontakt.</p>
-<div class="category-grid">
+<div class="category-search" role="search"><span aria-hidden="true">⌕</span><input id="category-search-input" type="search" placeholder="Sök bland tjänster, t.ex. hundvakt, kock eller IT" aria-label="Sök bland tjänster"><span class="category-search-count" id="category-search-count">Alla områden</span></div>
+<div class="category-grid" id="main-category-grid">
 <a class="visual-card" href="#event"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=900&q=82" alt="DJ spelar musik på ett event"><span class="arrow">↗</span><div class="visual-card-copy"><small>NÄTVERKET EVENT</small><h3>DJ & musik</h3><p>DJ:s, liveband och musik till alla tillfällen.</p></div></a>
 <a class="visual-card" href="#event"><img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=82" alt="Sångare uppträder på scen"><span class="arrow">↗</span><div class="visual-card-copy"><small>LIVE & UNDERHÅLLNING</small><h3>Trubadurer & artister</h3><p>Sångare, musiker och scenunderhållning.</p></div></a>
 <a class="visual-card" href="#event"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=82" alt="Publik och festlig tillställning"><span class="arrow">↗</span><div class="visual-card-copy"><small>AKTIVITETER</small><h3>Quiz & värdar</h3><p>Quiz, konferencierer och festvärdar.</p></div></a>
@@ -402,64 +424,68 @@ function openRequestJourney(category, title){
  const categorySelect=document.getElementById('request-category');
  if(categorySelect){
    const value=category||'Annat / vet inte ännu';
-   const option=[...categorySelect.options].find(o=>o.textContent.toLowerCase()===value.toLowerCase());
+   const option=[...categorySelect.options].find(o=>o.textContent.trim().toLowerCase()===value.toLowerCase());
    categorySelect.value=option?option.value:'Annat / vet inte ännu';
  }
  const titleInput=document.querySelector('#request-form input[name="title"]');
  if(titleInput && title)titleInput.value=title;
  const note=document.getElementById('category-selection-note');
- if(note){note.textContent=title?'Du har valt: '+title+'. Beskriv gärna vad du behöver så hjälper vi dig vidare.':'Berätta vad du behöver hjälp med.';}
- document.getElementById('behov')?.scrollIntoView({behavior:'smooth',block:'start'});
+ if(note){note.textContent=title?'Valt område: '+title+'. Fyll i formuläret så tar vi nästa steg.':'Beskriv vad du behöver hjälp med – du behöver inte kunna välja exakt kategori.';}
+ const target=document.querySelector('#behov details.audience-card');
+ target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
 }
 function openProviderJourney(){
  const details=document.getElementById('uppdrag');
  if(details)details.open=true;
- details?.scrollIntoView({behavior:'smooth',block:'center'});
+ details?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
 }
 function categoryForCard(card){
- const label=(card.querySelector('h3')?.textContent||'').toLowerCase();
- const context=(card.querySelector('small')?.textContent||'').toLowerCase();
+ const text=((card.querySelector('h3')?.textContent||'')+' '+(card.querySelector('small')?.textContent||'')+' '+(card.querySelector('p')?.textContent||'')).toLowerCase();
  const rules=[
-  [/bartender|server|kock|köks|disk|restaurang/,'Bartender, servering & restaurang'],
-  [/personal|bemanning|rekrytering|hotell/,'Personal & bemanning'],
   [/hund|katt|djur/,'Hund- & kattpassning'],
-  [/transport|leverans|bud|logistik/,'Transport & leverans'],
-  [/entré|publik|trygghet|värd|bevakning/,'Entrévärdar & publikvärdar'],
-  [/it|teknik|digital|ai|wifi|mobil/,'IT & teknisk hjälp'],
-  [/kurs|utbildning|språk|musiklektion/,'Kurser & utbildning'],
-  [/flytt|bärhjälp/,'Flytt & bärhjälp'],
-  [/hantverk|montering|installation|reparation/,'Hemservice & hantverk'],
-  [/städ|trädgård|hemservice/,'Hemservice & hantverk'],
-  [/starta|företag|bokföring|marknadsföring/,'Starta & utveckla företag'],
-  [/dj|band|trubadur|artist|quiz|catering|event|fest|konferens|bröllop/,'Event & underhållning']
+  [/bartender|server|kock|köks|disk|restaurang|barpersonal/,'Bartender, servering & restaurang'],
+  [/personal|bemanning|rekrytering|hotell|konferens|eventcrew|värdskap/,'Personal & bemanning'],
+  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar'],
+  [/transport|leverans|bud|logistik|lager/,'Transport & leverans'],
+  [/it|teknik|digital|ai|wifi|mobil|system/,'IT & teknisk hjälp'],
+  [/kurs|utbildning|språk|musiklektion|hlr|ledarskap|workshop/,'Kurser & utbildning'],
+  [/flytt|bärhjälp|montering/,'Flytt & bärhjälp'],
+  [/hantverk|installation|reparation|trädgård|städ|hemservice|fastighet|bostad/,'Hemservice & hantverk'],
+  [/starta|företag|bokföring|marknadsföring|redovisning|juridik|försäkring|administration|ekonomi/,'Starta & utveckla företag'],
+  [/dj|band|trubadur|artist|quiz|catering|event|fest|konferens|bröllop|musik|underhållning/,'Event & underhållning']
  ];
- for(const [pattern,value] of rules)if(pattern.test(label+' '+context))return value;
- const section=card.closest('section')?.id||'';
- if(section==='hemma')return 'Hemservice & hantverk';
- if(section==='event')return 'Event & underhållning';
- if(section==='bemanning')return 'Personal & bemanning';
- if(section==='utbildning')return 'Kurser & utbildning';
- if(section==='starta')return 'Starta & utveckla företag';
- if(section==='foretag')return 'IT & teknisk hjälp';
+ for(const [pattern,value] of rules)if(pattern.test(text))return value;
  return 'Annat / vet inte ännu';
+}
+function filterMainCategories(){
+ const input=document.getElementById('category-search-input');
+ const grid=document.getElementById('main-category-grid');
+ if(!input||!grid)return;
+ const q=input.value.trim().toLocaleLowerCase('sv');
+ const cards=[...grid.querySelectorAll('.visual-card')];
+ let shown=0;
+ cards.forEach(card=>{const match=!q||card.textContent.toLocaleLowerCase('sv').includes(q)||categoryForCard(card).toLocaleLowerCase('sv').includes(q);card.hidden=!match;if(match)shown++;});
+ let empty=document.getElementById('category-search-empty');
+ if(!empty){empty=document.createElement('p');empty.id='category-search-empty';empty.className='category-empty';empty.textContent='Vi hittar inget exakt område. Välj ändå ”Annat” eller beskriv behovet med egna ord.';grid.after(empty);}
+ empty.hidden=shown!==0;
+ const count=document.getElementById('category-search-count');
+ if(count)count.textContent=q?shown+' träffar':'Alla områden';
 }
 document.addEventListener('click',function(event){
  const visual=event.target.closest('a.visual-card');
- if(visual){
-  event.preventDefault();
-  openRequestJourney(categoryForCard(visual),visual.querySelector('h3')?.textContent?.trim()||'');
-  return;
- }
+ if(visual){event.preventDefault();openRequestJourney(categoryForCard(visual),visual.querySelector('h3')?.textContent?.trim()||'');return;}
  const businessCard=event.target.closest('#foretag article.category-card');
- if(businessCard){
-  const title=businessCard.querySelector('h3')?.textContent?.trim()||'';
-  const category=categoryForCard(businessCard);
-  openRequestJourney(category,title);
-  return;
- }
+ if(businessCard){openRequestJourney(categoryForCard(businessCard),businessCard.querySelector('h3')?.textContent?.trim()||'');return;}
  const provider=event.target.closest('a[href="#uppdrag"]');
  if(provider){event.preventDefault();openProviderJourney();return;}
  const customer=event.target.closest('a[href="#behov"]');
  if(customer){event.preventDefault();openRequestJourney('Annat / vet inte ännu','');}
 });
+document.addEventListener('keydown',function(event){
+ const card=event.target.closest('#foretag article.category-card');
+ if(card&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openRequestJourney(categoryForCard(card),card.querySelector('h3')?.textContent?.trim()||'');}
+});
+document.getElementById('category-search-input')?.addEventListener('input',filterMainCategories);
+document.querySelectorAll('#foretag article.category-card').forEach(card=>{card.setAttribute('tabindex','0');card.setAttribute('role','button');card.setAttribute('aria-label','Utforska '+(card.querySelector('h3')?.textContent||'kategori'));});
+
 </script></body></html>
