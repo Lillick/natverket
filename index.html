@@ -174,10 +174,93 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .category-empty{padding:18px;background:#fff;border:1px dashed #aabac8;border-radius:12px;color:#52657a;margin-top:12px}
 @media(max-width:600px){.visual-card{min-height:178px}.category-search{gap:8px;padding:10px 12px}.category-search-count{font-size:11px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Premium redesign – tydligare hierarki, starkare kontrast och större visuella val */
+:root{--navy:#10213a;--navy2:#183b57;--teal:#12b8a7;--teal-dark:#087f78;--gold:#f5bd4f;--bg:#f4f7fb}
+body{background:#f4f7fb}
+.public-wrap{max-width:1240px;padding:22px 24px 76px}
+.public-nav{position:sticky;top:0;z-index:30;margin:0 -24px 18px;padding:13px 24px;background:#f4f7fbef;backdrop-filter:blur(16px);border-bottom:1px solid #dfe7ef}
+.public-nav .nav-home{font-size:21px;letter-spacing:2px}
+.public-nav .navlinks{gap:25px}
+.public-nav .navlinks a{font-size:14px;color:#42546b;font-weight:700}
+.public-nav .navlinks a:hover{color:#087f78}
+.public-nav .nav-cta{padding:12px 19px;border-radius:999px;background:#10213a;box-shadow:0 7px 18px #10213a20}
+.public-hero{min-height:560px;display:flex;flex-direction:column;justify-content:center;padding:clamp(34px,6vw,78px);border-radius:30px;background:linear-gradient(90deg,rgba(8,19,38,.98) 0%,rgba(8,19,38,.91) 45%,rgba(8,19,38,.48) 100%),url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=2200&q=90') center 42%/cover;box-shadow:0 24px 60px #10213a24}
+.public-hero:after{content:"";position:absolute;right:-110px;bottom:-220px;top:auto;width:540px;height:540px;border:1px solid #8ce8de44;border-radius:50%;box-shadow:0 0 0 45px #8ce8de0d,0 0 0 90px #8ce8de08}
+.public-hero .public-kicker{display:inline-flex;align-self:flex-start;align-items:center;gap:9px;padding:8px 13px;border:1px solid #a8eee54d;border-radius:999px;background:#ffffff12;font-size:11px;letter-spacing:1.5px}
+.public-hero .public-kicker:before{content:"";width:7px;height:7px;border-radius:50%;background:#5ce0ce;box-shadow:0 0 0 4px #5ce0ce22}
+.public-hero h1{font-size:clamp(43px,6.2vw,76px);max-width:800px;line-height:1.02;letter-spacing:-2.7px;margin:22px 0 17px}
+.public-hero h1 span{display:block;color:#82e7dc}
+.public-hero p{font-size:18px;line-height:1.65;max-width:620px;color:#e4edf5}
+.public-actions{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:15px;margin-top:28px}
+.public-actions a.hero-choice{position:relative;min-height:174px;padding:21px 23px;border-radius:20px;gap:9px;background:linear-gradient(145deg,#32d2bf,#0ba395);border:1px solid #8ef1e5;box-shadow:0 15px 35px #03152666;transition:transform .2s,box-shadow .2s}
+.public-actions a.hero-choice:hover{transform:translateY(-5px);box-shadow:0 21px 42px #03152688}
+.public-actions a.hero-choice.secondary{background:#ffffffed;color:#12253e;border:1px solid #fff;backdrop-filter:blur(10px)}
+.hero-choice .choice-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#063e4430;font-size:24px;font-weight:800}
+.hero-choice.secondary .choice-icon{background:#e6f5f2;color:#087f78}
+.hero-choice strong{font-size:21px;letter-spacing:-.4px}
+.hero-choice span:not(.choice-icon){font-size:13px;line-height:1.4}
+.hero-choice b{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:7px;font-size:14px}
+.hero-assurance{gap:12px 24px;margin-top:25px;font-size:13px}
+.hero-assurance span{display:inline-flex;align-items:center;gap:7px}
+.hero-assurance span:before{content:"✓";display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#7fe4d622;color:#9af0e6;font-weight:900}
+.public-section{padding:76px 0 12px}
+.public-section>.public-kicker{font-size:11px;letter-spacing:1.8px}
+.public-section h2{font-size:clamp(30px,4vw,44px);letter-spacing:-1.4px;margin:10px 0 12px}
+.public-intro{font-size:17px;line-height:1.7;max-width:720px;color:#58677d}
+#tjanster .category-search{max-width:760px;margin:25px 0 18px;border:1px solid #d9e2ec;border-radius:16px;padding:10px 17px;box-shadow:0 8px 24px #10213a0b}
+#tjanster .category-search input{font-size:16px}
+#tjanster .category-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:19px;margin-top:18px}
+#tjanster .visual-card{min-height:260px;border-radius:22px;box-shadow:0 13px 30px #142a451c}
+#tjanster .visual-card:after{background:linear-gradient(0deg,rgba(5,17,35,.96) 0%,rgba(5,17,35,.46) 52%,rgba(5,17,35,.03) 100%)}
+#tjanster .visual-card-copy{padding:22px}
+#tjanster .visual-card small{font-size:10px;letter-spacing:1.5px;color:#8ce8de}
+#tjanster .visual-card h3{font-size:23px;letter-spacing:-.6px;margin-bottom:7px}
+#tjanster .visual-card p{font-size:14px;line-height:1.5;max-width:300px}
+#tjanster .visual-card .arrow{width:39px;height:39px;right:17px;top:17px;background:#fff;color:#10213a;font-weight:800;box-shadow:0 5px 14px #0002}
+#tjanster .visual-card:hover{transform:translateY(-6px);box-shadow:0 22px 42px #142a4533}
+#behov .audience-grid{gap:20px}
+#behov .audience-card{position:relative;min-height:210px;padding:29px;border-radius:22px;box-shadow:0 12px 32px #10213a0b}
+#behov .audience-card:first-child{background:linear-gradient(145deg,#fff,#eef8f7)}
+#behov .audience-card:last-child{background:linear-gradient(145deg,#fff,#f1f4fb)}
+#behov .audience-card h3{font-size:25px;letter-spacing:-.7px;margin:10px 0}
+#behov .audience-card p{font-size:15px;line-height:1.6}
+#behov .card-action{padding-top:14px;border-top:1px solid #dfe9ec}
+.inspiration-live{border-radius:23px;padding:25px 29px;box-shadow:0 15px 38px #10213a0d}
+.launch-band{border-radius:22px}
+.step-card,.repeat-card,.live-card{border-radius:20px}
+.public-footer{padding:30px 0}
+@media(max-width:900px){.public-wrap{padding-left:18px;padding-right:18px}.public-nav{margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px}.public-hero{min-height:500px}.public-section{padding-top:58px}#tjanster .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){
+ .public-wrap{padding:10px 13px 48px}
+ .public-nav{margin:0 -13px 13px;padding:11px 13px;gap:8px}
+ .public-nav .nav-home{font-size:19px}
+ .public-nav .navlinks{gap:17px;font-size:12px}
+ .public-hero{min-height:0;padding:34px 22px 30px;border-radius:22px;background-position:58% center}
+ .public-hero h1{font-size:clamp(39px,10.7vw,51px);letter-spacing:-1.8px;margin:19px 0 13px}
+ .public-hero p{font-size:16px;line-height:1.55}
+ .public-actions{grid-template-columns:1fr;gap:11px;margin-top:21px}
+ .public-actions a.hero-choice{min-height:142px;padding:17px 19px}
+ .hero-assurance{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px;font-size:11px}
+ .public-section{padding-top:48px}
+ .public-section h2{font-size:32px}
+ #tjanster .category-grid{grid-template-columns:1fr 1fr;gap:11px}
+ #tjanster .visual-card{min-height:205px;border-radius:17px}
+ #tjanster .visual-card-copy{padding:13px}
+ #tjanster .visual-card h3{font-size:17px}
+ #tjanster .visual-card p{font-size:11px;line-height:1.35}
+ #tjanster .visual-card small{font-size:9px;letter-spacing:.8px}
+ #tjanster .visual-card .arrow{width:29px;height:29px;right:9px;top:9px}
+ #behov .audience-card{padding:21px;min-height:0}
+ #behov .audience-card h3{font-size:22px}
+ .inspiration-live{padding:18px}
+}
+@media(max-width:390px){#tjanster .category-grid{grid-template-columns:1fr}#tjanster .visual-card{min-height:220px}}
+@media(prefers-reduced-motion:reduce){.public-actions a.hero-choice:hover,#tjanster .visual-card:hover{transform:none}}
 </style></head><body><header><div class="brand"><div class="brand-mark">N</div><div><div class="brand-name">NÄTVERKET</div><div class="brand-sub">En plattform. Fler möjligheter.</div></div></div></header><main>
 <section id="public-home" class="public-wrap">
 <nav class="public-nav" aria-label="Huvudmeny"><a class="nav-home" href="#public-home" aria-label="NÄTVERKET startsida">NÄTVERKET</a><div class="navlinks"><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#live">Möjligheter</a><a href="#sa-fungerar">Så fungerar det</a></div><a class="nav-cta" href="#behov">Kom igång</a></nav>
-<section class="public-hero"><div class="public-kicker">HJÄLP, TJÄNSTER & MÖJLIGHETER – PÅ ETT STÄLLE</div><h1>Vad behöver du hjälp med <span>– eller vad kan du erbjuda?</span></h1><p>Hitta rätt person för jobbet, få extra personal när det behövs eller gör din kompetens till nya uppdrag. NÄTVERKET för samman privatpersoner, företag och utförare.</p><div class="public-actions"><a href="#behov" class="hero-choice"><strong>Jag söker hjälp</strong><span>Hitta tjänster, personal eller en lösning</span><b>Kom igång →</b></a><a href="#uppdrag" class="secondary hero-choice"><strong>Jag vill erbjuda mina tjänster</strong><span>Hitta uppdrag, kunder och nya möjligheter</span><b>Kom igång →</b></a></div><div class="hero-assurance"><span>✓ För privatpersoner</span><span>✓ För företag</span><span>✓ För dig som vill jobba extra</span></div></section>
+<section class="public-hero"><div class="public-kicker">EN PLATS FÖR HJÄLP, JOBB & TJÄNSTER</div><h1>Vad behöver du hjälp med? <span>Eller vill du hitta nya uppdrag?</span></h1><p>Hitta rätt person för jobbet, få extra personal eller erbjud din kompetens. NÄTVERKET gör det enklare att hitta varandra – för privatpersoner och företag.</p><div class="public-actions"><a href="#behov" class="hero-choice"><span class="choice-icon" aria-hidden="true">⌕</span><strong>Jag behöver hjälp</strong><span>Hitta en tjänst, person eller företag</span><b>Hitta hjälp <span aria-hidden="true">→</span></b></a><a href="#uppdrag" class="secondary hero-choice"><span class="choice-icon" aria-hidden="true">↗</span><strong>Jag söker uppdrag</strong><span>Hitta kunder, extrajobb och möjligheter</span><b>Hitta uppdrag <span aria-hidden="true">→</span></b></a></div><div class="hero-assurance"><span>✓ För privatpersoner</span><span>✓ För företag</span><span>✓ För dig som vill jobba extra</span></div></section>
 
 <section class="inspiration-live" id="inspiration-live" aria-label="Inspiration och exempel på uppdrag">
  <div class="inspiration-head"><div><span class="inspiration-pulse"></span><span class="inspiration-kicker">UPPTÄCK MÖJLIGHETER</span><span class="inspiration-demo">INSPIRATION – INTE AKTUELLA UPPDRAG</span></div><div class="inspiration-controls"><button type="button" id="inspiration-prev" aria-label="Föregående exempel">‹</button><span id="inspiration-count" aria-live="polite">1 / 6</span><button type="button" id="inspiration-next" aria-label="Nästa exempel">›</button></div></div>
