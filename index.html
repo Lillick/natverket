@@ -413,10 +413,12 @@ document.addEventListener('click',function(event){
    event.preventDefault();
    const title=card.querySelector('h3')?.textContent?.trim()||'';
    const section=card.closest('section')?.id||'';
+   const target=(card.getAttribute('href')||'').replace('#','');
    const categoryMap={event:'Event & underhållning',hemma:'Hemservice & hantverk',bemanning:'Personal & bemanning',utbildning:'Kurser & utbildning',starta:'Starta & utveckla företag',foretag:'IT & teknisk hjälp'};
-   let category=categoryMap[section]||'Annat / vet inte ännu';
+   let category=categoryMap[section]||categoryMap[target]||'Annat / vet inte ännu';
    const label=(card.querySelector('h3')?.textContent||'').toLowerCase();
    if(/bartender|server|kock|köks|disk/.test(label))category='Bartender, servering & restaurang';
+   else if(/personal|bemanning|rekrytering/.test(label))category='Personal & bemanning';
    else if(/hund|katt|djur/.test(label))category='Hund- & kattpassning';
    else if(/transport|leverans|bud/.test(label))category='Transport & leverans';
    else if(/entré|publik|trygghet|värd/.test(label))category='Entrévärdar & publikvärdar';
