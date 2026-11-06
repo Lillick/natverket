@@ -293,7 +293,7 @@ body{background:#f4f7fb}
 <label>E-post</label><input name="email" type="email" autocomplete="email" maxlength="254" required>
 <label>Telefon (frivilligt)</label><input name="phone" type="tel" autocomplete="tel" maxlength="40">
 <label>Ort</label><input name="city" autocomplete="address-level2" maxlength="100" value="Jönköping">
-<label>Vilken typ av hjälp söker du?</label><select name="category" id="request-category"><option value="">Välj kategori</option><option>Hemservice & hantverk</option><option>Flytt & bärhjälp</option><option>Hund- & kattpassning</option><option>IT & teknisk hjälp</option><option>Personal & bemanning</option><option>Bartender, servering & restaurang</option><option>Event & underhållning</option><option>Entrévärdar & publikvärdar</option><option>Transport & leverans</option><option>Kurser & utbildning</option><option>Starta & utveckla företag</option><option>Annat / vet inte ännu</option></select><label>Vad behöver du hjälp med?</label><input name="title" maxlength="160" placeholder="Exempel: boka DJ till fest, hitta en kock, få hjälp med IT eller anlita hantverkare" required>
+<label>Vilken typ av hjälp söker du?</label><select name="service_category" id="request-category"><option value="">Välj kategori</option><option>Hemservice & hantverk</option><option>Flytt & bärhjälp</option><option>Hund- & kattpassning</option><option>IT & teknisk hjälp</option><option>Personal & bemanning</option><option>Bartender, servering & restaurang</option><option>Event & underhållning</option><option>Entrévärdar & publikvärdar</option><option>Transport & leverans</option><option>Kurser & utbildning</option><option>Starta & utveckla företag</option><option>Annat / vet inte ännu</option></select><label>Vad behöver du hjälp med?</label><input name="title" maxlength="160" placeholder="Exempel: boka DJ till fest, hitta en kock, få hjälp med IT eller anlita hantverkare" required>
 <label>Beskriv behovet</label><textarea name="description" maxlength="3000" placeholder="Berätta kort vad du behöver hjälp med."></textarea>
 <div class="hp-field" aria-hidden="true"><label>Lämna detta fält tomt</label><input name="website" tabindex="-1" autocomplete="off"></div>
 <p class="category-selection-note" id="category-selection-note">Välj en kategori eller beskriv behovet med egna ord.</p><p class="form-status" id="request-status" role="status">Formuläret är förberett men ännu inte öppet. Inga uppgifter skickas eller sparas.</p>
@@ -304,7 +304,10 @@ body{background:#f4f7fb}
 <label>E-post</label><input name="email" type="email" autocomplete="email" maxlength="254" required>
 <label>Telefon (frivilligt)</label><input name="phone" type="tel" autocomplete="tel" maxlength="40">
 <label>Ort</label><input name="city" autocomplete="address-level2" maxlength="100" value="Jönköping">
-<label>Kompetens och erfarenhet</label><textarea name="experience" maxlength="3000" placeholder="Vilka jobb, tjänster eller uppdrag är du intresserad av?"></textarea>
+<label>Vilket område vill du arbeta inom?</label><select name="interest_category"><option value="">Välj område (frivilligt)</option><option>Hemservice & hantverk</option><option>Flytt & bärhjälp</option><option>Hund- & kattpassning</option><option>IT & teknisk hjälp</option><option>Personal & bemanning</option><option>Bartender, servering & restaurang</option><option>Event & underhållning</option><option>Entrévärdar & publikvärdar</option><option>Transport & leverans</option><option>Kurser & utbildning</option><option>Starta & utveckla företag</option><option>Annat / flera områden</option></select>
+<label>Vilken typ av möjlighet söker du?</label><select name="work_type"><option value="">Välj typ (frivilligt)</option><option>Extrajobb vid behov</option><option>Enstaka uppdrag</option><option>Återkommande uppdrag</option><option>Deltidsanställning</option><option>Heltidsanställning</option><option>Konsultuppdrag</option><option>Öppen för flera alternativ</option></select>
+<label>När kan du börja eller arbeta?</label><select name="availability"><option value="">Välj tillgänglighet (frivilligt)</option><option>Omgående</option><option>Inom två veckor</option><option>Inom en månad</option><option>Flexibelt / enligt överenskommelse</option><option>Helger och kvällar</option><option>Vardagar</option></select>
+<label>Kompetens och erfarenhet</label><textarea name="experience" maxlength="2500" placeholder="Beskriv vad du kan hjälpa till med, din erfarenhet, certifikat och vilka uppdrag du trivs med. Skriv gärna om du har F-skatt eller eget företag om det är relevant."></textarea>
 <div class="hp-field" aria-hidden="true"><label>Lämna detta fält tomt</label><input name="website" tabindex="-1" autocomplete="off"></div>
 <p class="form-status" id="person-status" role="status">Formuläret är förberett men ännu inte öppet. Inga uppgifter skickas eller sparas.</p>
 <button type="submit" disabled>Skicka intresseanmälan – öppnar snart</button>
@@ -441,6 +444,15 @@ async function submitPublicForm(event,kind){
   status.textContent='Skickar…';
   const payload=Object.fromEntries(new FormData(form).entries());
   payload.kind=kind;
+  if(kind==='person'){
+    const profileParts=[];
+    if(payload.interest_category)profileParts.push('Önskat område: '+payload.interest_category);
+    if(payload.work_type)profileParts.push('Önskad möjlighet: '+payload.work_type);
+    if(payload.experience)profileParts.push(payload.experience);
+    payload.experience=profileParts.join('\\n\\n').slice(0,3000);
+    delete payload.interest_category;
+    delete payload.work_type;
+  }
   try{
     const response=await fetch(PUBLIC_INTAKE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const result=await response.json();
