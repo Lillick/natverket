@@ -525,19 +525,34 @@ function openProviderJourney(){
  details?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
 }
 function categoryForCard(card){
- const text=((card.querySelector('h3')?.textContent||'')+' '+(card.querySelector('small')?.textContent||'')+' '+(card.querySelector('p')?.textContent||'')).toLowerCase();
+ const title=(card.querySelector('h3')?.textContent||'').trim().toLocaleLowerCase('sv');
+ const exact={
+  'dj & musik':'Event & underhållning','trubadurer & artister':'Event & underhållning','quiz & värdar':'Event & underhållning','catering & fest':'Event & underhållning',
+  'hantverk & montering':'Hemservice & hantverk','hemservice':'Hemservice & hantverk','personal & bemanning':'Personal & bemanning','it & företagstjänster':'IT & teknisk hjälp',
+  'transport & leverans':'Transport & leverans','fastighet & bostad':'Hemservice & hantverk','hund- & kattvakt':'Hund- & kattpassning',
+  'bartender & servering':'Bartender, servering & restaurang','kockar & kökspersonal':'Bartender, servering & restaurang','kurser & utbildningar':'Kurser & utbildning',
+  'entrévärdar & trygghet':'Entrévärdar & publikvärdar','dj, band & trubadurer':'Event & underhållning','event & festplanering':'Event & underhållning',
+  'konferens & företagsevent':'Event & underhållning','bröllop & firande':'Event & underhållning','entrévärdar & publikvärdar':'Entrévärdar & publikvärdar',
+  'hund- & kattpassning':'Hund- & kattpassning','trädgård & utemiljö':'Hemservice & hantverk','städning & hemservice':'Hemservice & hantverk',
+  'montering & flytthjälp':'Flytt & bärhjälp','hotell & konferens':'Personal & bemanning','event & värdskap':'Personal & bemanning',
+  'språk, musik & it':'Kurser & utbildning','ledarskap & team':'Kurser & utbildning','teknik, ai & system':'Kurser & utbildning','hlr & säkerhet':'Kurser & utbildning',
+  'starta eget & registrering':'Starta & utveckla företag','bokföring & redovisning':'Starta & utveckla företag',
+  'juridik, avtal & försäkring':'Starta & utveckla företag','kunder & konsultuppdrag':'Starta & utveckla företag'
+ };
+ if(exact[title])return exact[title];
+ const text=(title+' '+(card.querySelector('small')?.textContent||'')+' '+(card.querySelector('p')?.textContent||'')).toLocaleLowerCase('sv');
  const rules=[
+  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar'],
   [/hund|katt|djur/,'Hund- & kattpassning'],
   [/bartender|server|kock|köks|disk|restaurang|barpersonal/,'Bartender, servering & restaurang'],
-  [/personal|bemanning|rekrytering|hotell|konferens|eventcrew|värdskap/,'Personal & bemanning'],
-  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar'],
   [/transport|leverans|bud|logistik|lager/,'Transport & leverans'],
   [/it|teknik|digital|ai|wifi|mobil|system/,'IT & teknisk hjälp'],
-  [/kurs|utbildning|språk|musiklektion|hlr|ledarskap|workshop/,'Kurser & utbildning'],
-  [/flytt|bärhjälp|montering/,'Flytt & bärhjälp'],
-  [/hantverk|installation|reparation|trädgård|städ|hemservice|fastighet|bostad/,'Hemservice & hantverk'],
-  [/starta|företag|bokföring|marknadsföring|redovisning|juridik|försäkring|administration|ekonomi/,'Starta & utveckla företag'],
-  [/dj|band|trubadur|artist|quiz|catering|event|fest|konferens|bröllop|musik|underhållning/,'Event & underhållning']
+  [/kurs|utbildning|språk|hlr|ledarskap|workshop/,'Kurser & utbildning'],
+  [/starta|bokföring|marknadsföring|redovisning|juridik|försäkring|administration|ekonomi/,'Starta & utveckla företag'],
+  [/dj|band|trubadur|artist|quiz|catering|event|fest|bröllop|musik|underhållning/,'Event & underhållning'],
+  [/personal|bemanning|rekrytering|hotell|konferens|eventcrew|värdskap/,'Personal & bemanning'],
+  [/flytt|bärhjälp/,'Flytt & bärhjälp'],
+  [/hantverk|installation|reparation|montering|trädgård|städ|hemservice|fastighet|bostad/,'Hemservice & hantverk']
  ];
  for(const [pattern,value] of rules)if(pattern.test(text))return value;
  return 'Annat / vet inte ännu';
