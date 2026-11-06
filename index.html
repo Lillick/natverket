@@ -107,13 +107,50 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 @keyframes inspirationFade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:700px){.inspiration-live{padding:18px}.inspiration-content{grid-template-columns:1fr;gap:15px;min-height:0}.inspiration-side{min-height:0}.inspiration-head{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){.inspiration-live.is-changing .inspiration-content{animation:none}.inspiration-progress span{transition:none}}
+
+/* Clearer customer journey and accessible category navigation */
+.public-nav{position:relative;z-index:5;min-height:54px}
+.public-nav .nav-home{font-size:18px;letter-spacing:1.4px;font-weight:900;color:var(--navy);text-decoration:none}
+.public-nav .nav-cta{background:#10243b;color:#fff!important;text-decoration:none;padding:10px 17px;border-radius:11px;font-weight:800}
+.public-nav .navlinks a{padding:9px 0;text-decoration:none}
+.public-hero{min-height:510px;padding:clamp(30px,6vw,72px);background:linear-gradient(90deg,rgba(8,18,36,.96) 0%,rgba(8,18,36,.84) 56%,rgba(8,18,36,.32) 100%),url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=2200&q=85') center/cover}
+.public-hero h1{max-width:850px;font-size:clamp(39px,6vw,70px);line-height:1.04}
+.public-hero h1 span{color:#83e6dc}
+.public-hero p{max-width:650px}
+.public-actions{display:grid;grid-template-columns:repeat(2,minmax(0,330px));max-width:700px;gap:14px}
+.public-actions a.hero-choice{display:flex;flex-direction:column;gap:8px;min-height:140px;padding:20px 22px;text-align:left;text-decoration:none;border:1px solid #7de5db55;border-radius:16px;background:linear-gradient(135deg,#20c7b2,#0c978e);color:#062e38;box-shadow:0 10px 25px #0003}
+.public-actions a.hero-choice.secondary{background:#ffffff13;border:1px solid #ffffff70;color:#fff;backdrop-filter:blur(8px)}
+.hero-choice strong{font-size:19px;line-height:1.25}
+.hero-choice span{font-size:13px;line-height:1.4;font-weight:500;opacity:.92}
+.hero-choice b{margin-top:auto;font-size:14px}
+.hero-assurance{display:flex;flex-wrap:wrap;gap:18px;margin-top:23px;color:#e4f5f3;font-size:13px;font-weight:650}
+.public-section{scroll-margin-top:20px}
+#behov .audience-grid{gap:18px}
+#behov .audience-card{transition:border-color .2s,box-shadow .2s}
+#behov .audience-card[open]{border-color:#16aa9d;box-shadow:0 14px 32px #0d766b18}
+.category-card,.visual-card{outline-offset:4px}
+.visual-card:focus-visible,.public-nav a:focus-visible,.public-actions a:focus-visible{outline:3px solid #f4b942;outline-offset:4px}
+.visual-card-copy{padding:19px}
+.visual-card h3{line-height:1.2}
+.visual-card p{font-size:13px}
+.intake-form select:focus,.intake-form input:focus,.intake-form textarea:focus{outline:3px solid #16aa9d22;border-color:#0a9488}
+.category-selection-note{margin:10px 0 0;padding:12px 14px;border-radius:10px;background:#e9f7f5;color:#145b56;font-size:14px;font-weight:650}
+@media(max-width:700px){
+ .public-nav{gap:10px}.public-nav .navlinks{width:100%;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;padding-bottom:5px}
+ .public-nav .nav-cta{display:none}
+ .public-actions{grid-template-columns:1fr;max-width:none}
+ .public-actions a.hero-choice{min-height:116px}
+ .hero-assurance{gap:8px 14px;font-size:12px}
+ .public-hero{min-height:0;padding:30px 22px;background-position:58% center}
+ .public-hero h1{font-size:clamp(37px,10vw,48px)}
+}
 </style></head><body><header><div class="brand"><div class="brand-mark">N</div><div><div class="brand-name">NÄTVERKET</div><div class="brand-sub">En plattform. Fler möjligheter.</div></div></div></header><main>
 <section id="public-home" class="public-wrap">
-<nav class="public-nav"><div class="navlinks"><a href="#live">NÄTVERKET LIVE</a><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#utbildning">Utbildning</a><a href="#sa-fungerar">Så fungerar det</a><a href="#aterkommande-kunder">Återkommande kunder</a><a href="#affarsmodell">Affärsmodell</a></div></nav>
-<section class="public-hero"><div class="public-kicker">PRIVATPERSONER · FÖRETAG · BEMANNING · TJÄNSTER</div><h1>Rätt människor.<br><span>Rätt möjligheter.</span></h1><p>Hitta hjälp hemma, boka en utbildning, få tag på en akut bartender eller hitta rätt kompetens till företaget. NÄTVERKET samlar tjänster, människor och uppdrag på ett och samma ställe – med personlig förmedling när du behöver det.</p><div class="public-actions"><a href="#behov">Jag behöver hjälp</a><a class="secondary" href="#foretag">Vi är ett företag</a><a class="secondary" href="#uppdrag">Jag vill erbjuda mina tjänster</a></div></section>
+<nav class="public-nav" aria-label="Huvudmeny"><a class="nav-home" href="#public-home" aria-label="NÄTVERKET startsida">NÄTVERKET</a><div class="navlinks"><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#live">Möjligheter</a><a href="#sa-fungerar">Så fungerar det</a></div><a class="nav-cta" href="#behov">Kom igång</a></nav>
+<section class="public-hero"><div class="public-kicker">HJÄLP, TJÄNSTER & MÖJLIGHETER – PÅ ETT STÄLLE</div><h1>Vad behöver du hjälp med <span>– eller vad kan du erbjuda?</span></h1><p>Hitta rätt person för jobbet, få extra personal när det behövs eller gör din kompetens till nya uppdrag. NÄTVERKET för samman privatpersoner, företag och utförare.</p><div class="public-actions"><a href="#behov" class="hero-choice"><strong>Jag söker hjälp</strong><span>Hitta tjänster, personal eller en lösning</span><b>Kom igång →</b></a><a href="#uppdrag" class="secondary hero-choice"><strong>Jag vill erbjuda mina tjänster</strong><span>Hitta uppdrag, kunder och nya möjligheter</span><b>Kom igång →</b></a></div><div class="hero-assurance"><span>✓ För privatpersoner</span><span>✓ För företag</span><span>✓ För dig som vill jobba extra</span></div></section>
 
 <section class="inspiration-live" id="inspiration-live" aria-label="Inspiration och exempel på uppdrag">
- <div class="inspiration-head"><div><span class="inspiration-pulse"></span><span class="inspiration-kicker">UPPTÄCK MÖJLIGHETER</span><span class="inspiration-demo">EXEMPEL & INSPIRATION</span></div><div class="inspiration-controls"><button type="button" id="inspiration-prev" aria-label="Föregående exempel">‹</button><span id="inspiration-count" aria-live="polite">1 / 6</span><button type="button" id="inspiration-next" aria-label="Nästa exempel">›</button></div></div>
+ <div class="inspiration-head"><div><span class="inspiration-pulse"></span><span class="inspiration-kicker">UPPTÄCK MÖJLIGHETER</span><span class="inspiration-demo">INSPIRATION – INTE AKTUELLA UPPDRAG</span></div><div class="inspiration-controls"><button type="button" id="inspiration-prev" aria-label="Föregående exempel">‹</button><span id="inspiration-count" aria-live="polite">1 / 6</span><button type="button" id="inspiration-next" aria-label="Nästa exempel">›</button></div></div>
  <div class="inspiration-content" aria-live="polite" aria-atomic="true">
   <div class="inspiration-copy"><div class="inspiration-category" id="inspiration-category">FÖR FÖRETAG</div><h2 id="inspiration-title">Behöver ni förstärkning i helgen?</h2><p id="inspiration-text">En restaurang, ett hotell eller en eventarrangör kan behöva en extra kock, bartender eller serveringspersonal med kort varsel.</p><div class="inspiration-actions"><a id="inspiration-customer" href="#behov">Jag behöver hjälp</a><a id="inspiration-provider" href="#uppdrag">Jag kan hjälpa till</a></div></div>
   <div class="inspiration-side"><span class="inspiration-spark">✳</span><strong id="inspiration-prompt">Har du erfarenhet inom service?</strong><span>Det kan finnas en möjlighet för både den som söker hjälp och den som vill erbjuda sina tjänster.</span></div>
@@ -127,10 +164,10 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 <label>E-post</label><input name="email" type="email" autocomplete="email" maxlength="254" required>
 <label>Telefon (frivilligt)</label><input name="phone" type="tel" autocomplete="tel" maxlength="40">
 <label>Ort</label><input name="city" autocomplete="address-level2" maxlength="100" value="Jönköping">
-<label>Vad behöver du hjälp med?</label><input name="title" maxlength="160" placeholder="Exempel: få hjälp med ny mobil, flytta bilder, montera möbler eller hitta hantverkare" required>
+<label>Vilken typ av hjälp söker du?</label><select name="category" id="request-category"><option value="">Välj kategori</option><option>Hemservice & hantverk</option><option>Flytt & bärhjälp</option><option>Hund- & kattpassning</option><option>IT & teknisk hjälp</option><option>Personal & bemanning</option><option>Bartender, servering & restaurang</option><option>Event & underhållning</option><option>Entrévärdar & publikvärdar</option><option>Transport & leverans</option><option>Kurser & utbildning</option><option>Starta & utveckla företag</option><option>Annat / vet inte ännu</option></select><label>Vad behöver du hjälp med?</label><input name="title" maxlength="160" placeholder="Exempel: få hjälp med ny mobil, flytta bilder, montera möbler eller hitta hantverkare" required>
 <label>Beskriv behovet</label><textarea name="description" maxlength="3000" placeholder="Berätta kort vad du behöver hjälp med."></textarea>
 <div class="hp-field" aria-hidden="true"><label>Lämna detta fält tomt</label><input name="website" tabindex="-1" autocomplete="off"></div>
-<p class="form-status" id="request-status" role="status">Formuläret är förberett men ännu inte öppet. Inga uppgifter skickas eller sparas.</p>
+<p class="category-selection-note" id="category-selection-note">Välj en kategori eller beskriv behovet med egna ord.</p><p class="form-status" id="request-status" role="status">Formuläret är förberett men ännu inte öppet. Inga uppgifter skickas eller sparas.</p>
 <button type="submit" disabled>Skicka förfrågan – öppnar snart</button>
 </form></div></details><details class="audience-card" id="uppdrag"><summary><div class="eyebrow">FÖR DIG SOM VILL ERBJUDA DIN KOMPETENS</div><h3>Jag söker jobb eller uppdrag</h3><p>Vill du hitta extrajobb, nya kunder eller anställning?</p><span class="card-action">Läs mer <b>＋</b></span></summary><div class="card-expanded"><p>NÄTVERKET ska hjälpa dig att synliggöra din erfarenhet och hitta relevanta möjligheter i nätverket.</p><form class="intake-form" id="person-form" onsubmit="submitPublicForm(event,'person')">
 <label>Förnamn</label><input name="first_name" autocomplete="given-name" maxlength="80" required>
@@ -192,7 +229,7 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 <a class="visual-card" href="#behov"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=82" alt="Affärsmöte"><span class="arrow">↗</span><div class="visual-card-copy"><small>STÖD & RÅDGIVNING</small><h3>Juridik, avtal & försäkring</h3><p>Hitta relevanta experter och tjänsteleverantörer.</p></div></a>
 <a class="visual-card" href="#behov"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=82" alt="Nätverkande företagare"><span class="arrow">↗</span><div class="visual-card-copy"><small>UTVECKLA</small><h3>Kunder & konsultuppdrag</h3><p>Visa din kompetens och hitta uppdrag genom NÄTVERKET.</p></div></a>
 </div><div class="launch-band"><h3 style="margin:0 0 7px;color:var(--navy)">Tre vägar att börja arbeta</h3><p style="margin:0"><strong>Eget företag:</strong> för dig som vill fakturera själv. <strong>Egenanställning:</strong> för tillfälliga uppdrag via ett egenanställningsföretag. <strong>Företagspartner:</strong> få kontakt med redovisning, rådgivning och andra specialister.</p></div></section>
-<section class="public-section" id="live"><div class="public-kicker">ETT LEVANDE NÄTVERK</div><h2>NÄTVERKET LIVE – när något behöver lösas.</h2><p class="public-intro">Akuta behov, småjobb och större uppdrag samlade på ett ställe. Den som behöver hjälp kan beskriva sitt behov. Rätt personer och företag kan anmäla intresse eller lämna offert.</p><div class="live-grid">
+<section class="public-section" id="live"><div class="public-kicker">SÅ KAN DET SE UT</div><h2>Behov som kan skapa nya möjligheter.</h2><p class="public-intro">Här visar vi exempel på uppdrag och situationer som NÄTVERKET kan hjälpa till med. Det här är inspirationsinnehåll – inte verifierade eller pågående kundförfrågningar.</p><div class="live-grid">
 <article class="live-card"><img class="live-photo" src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=900&q=80" alt="DJ på scen"><div class="live-content"><div class="live-top"><span class="live-tag urgent">DEMOEXEMPEL</span><span class="live-time">Illustration</span></div><h3>DJ sökes till restaurang</h3><p>Restaurangen behöver en DJ med egen utrustning till kvällens event.</p><div class="live-meta">Event · Jönköping</div></div></article>
 <article class="live-card"><img class="live-photo" src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80" alt="Personer samarbetar"><div class="live-content"><div class="live-top"><span class="live-tag">DEMOEXEMPEL</span><span class="live-time">Illustration</span></div><h3>Hjälp med förrådstömning</h3><p>Två personer behövs för att tömma och bära ut saker från ett förråd.</p><div class="live-meta">Hemma · Jönköping</div></div></article>
 <article class="live-card"><img class="live-photo" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80" alt="Ljust hem"><div class="live-content"><div class="live-top"><span class="live-tag">DEMOEXEMPEL</span><span class="live-time">Illustration</span></div><h3>Flyttstädning sökes</h3><p>Privatperson söker en pålitlig städfirma och vill jämföra offert.</p><div class="live-meta">Hemservice · Jönköping</div></div></article></div><div class="launch-band"><h3 style="margin:0 0 7px;color:var(--navy)">Snabbt när det är bråttom. Personligt när det behövs.</h3><p style="margin:0">Exemplen ovan är endast illustrationer. Det publika LIVE-flödet öppnas först när säkra inlämnings- och visningsfunktioner är driftsatta.</p><details class="category-card"><summary><div class="category-icon">🎉</div><h3>Event & upplevelser</h3><p>Artister, DJ, catering, fotografer, drönarfilm och festlösningar.</p><span class="card-action">Visa exempel <b>＋</b></span></summary><div class="card-expanded"><p>Bröllop, nyår, midsommar, jubileum, företagsevent, fotografering, drönarfoto och filmproduktion.</p><span class="coming-soon">Tjänsteområdet byggs upp</span></div></details><details class="category-card"><summary><div class="category-icon">🏡</div><h3>Bostad & fastighet</h3><p>Mäklare, bostadsfoto, styling, flytt, städ och fastighetsservice.</p><span class="card-action">Visa exempel <b>＋</b></span></summary><div class="card-expanded"><p>Fastighetsmäklare, bostadsfotografer, drönartjänster, homestyling, besiktning, flytt och fastighetsunderhåll.</p><span class="coming-soon">Tjänsteområdet byggs upp</span></div></details></div></section>
@@ -348,4 +385,49 @@ function restartInspiration(){if(inspirationTimer)clearInterval(inspirationTimer
 
 $('inspiration-prev').addEventListener('click',()=>moveInspiration(-1));$('inspiration-next').addEventListener('click',()=>moveInspiration(1));$('inspiration-live').addEventListener('mouseenter',()=>{if(inspirationTimer)clearInterval(inspirationTimer)});$('inspiration-live').addEventListener('mouseleave',restartInspiration);showInspiration(0);restartInspiration();
 window.addEventListener('load',async()=>{$('year').textContent=new Date().getFullYear();if(!adminMode)return;$('public-home').classList.add('hidden');localStorage.removeItem('nu');localStorage.removeItem('nk');let u=sessionStorage.getItem('nu'),k=sessionStorage.getItem('nk');if(u&&k){$('url').value=u;$('key').value=k;db=supabase.createClient(u,k);$('setup').classList.add('hidden');$('login').classList.remove('hidden');let {data:{session}}=await db.auth.getSession();if(session)await checkAdmin()}else{$('setup').classList.remove('hidden')}});
+
+/* Make every category card lead to a useful next step and preserve the selected category. */
+function openRequestJourney(category, title){
+ const details=document.querySelector('#behov details.audience-card');
+ if(details)details.open=true;
+ const categorySelect=document.getElementById('request-category');
+ if(categorySelect){
+   const value=category||'Annat / vet inte ännu';
+   const option=[...categorySelect.options].find(o=>o.textContent.toLowerCase()===value.toLowerCase());
+   categorySelect.value=option?option.value:'Annat / vet inte ännu';
+ }
+ const titleInput=document.querySelector('#request-form input[name="title"]');
+ if(titleInput && title)titleInput.value=title;
+ const note=document.getElementById('category-selection-note');
+ if(note){note.textContent=title?'Du har valt: '+title+'. Beskriv gärna vad du behöver så hjälper vi dig vidare.':'Berätta vad du behöver hjälp med.';}
+ document.getElementById('behov')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function openProviderJourney(){
+ const details=document.getElementById('uppdrag');
+ if(details)details.open=true;
+ details?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.addEventListener('click',function(event){
+ const card=event.target.closest('a.visual-card');
+ if(card){
+   event.preventDefault();
+   const title=card.querySelector('h3')?.textContent?.trim()||'';
+   const section=card.closest('section')?.id||'';
+   const categoryMap={event:'Event & underhållning',hemma:'Hemservice & hantverk',bemanning:'Personal & bemanning',utbildning:'Kurser & utbildning',starta:'Starta & utveckla företag',foretag:'IT & teknisk hjälp'};
+   let category=categoryMap[section]||'Annat / vet inte ännu';
+   const label=(card.querySelector('h3')?.textContent||'').toLowerCase();
+   if(/bartender|server|kock|köks|disk/.test(label))category='Bartender, servering & restaurang';
+   else if(/hund|katt|djur/.test(label))category='Hund- & kattpassning';
+   else if(/transport|leverans|bud/.test(label))category='Transport & leverans';
+   else if(/entré|publik|trygghet|värd/.test(label))category='Entrévärdar & publikvärdar';
+   else if(/it|teknik|digital/.test(label))category='IT & teknisk hjälp';
+   else if(/kurs|utbildning|språk|musik/.test(label))category='Kurser & utbildning';
+   else if(/flytt|bärhjälp/.test(label))category='Flytt & bärhjälp';
+   openRequestJourney(category,title);
+ }
+ const a=event.target.closest('a[href="#behov"]');
+ if(a && !a.classList.contains('visual-card')){setTimeout(()=>{const d=document.querySelector('#behov details.audience-card');if(d)d.open=true;},0);}
+ const p=event.target.closest('a[href="#uppdrag"]');
+ if(p){setTimeout(openProviderJourney,0);}
+});
 </script></body></html>
