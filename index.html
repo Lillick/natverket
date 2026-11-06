@@ -418,7 +418,7 @@ body{background:#f4f7fb}
 <div id="customers" class="box view hidden"><h2>Kundregister</h2><label>Namn</label><input id="cn"><div class="row"><div><label>Typ</label><select id="ct"><option value="private">Privat</option><option value="business">Företag</option></select></div><div><label>E-post</label><input id="ce"></div></div><div class="row"><div><label>Telefon</label><input id="cp"></div><div><label>Ort</label><input id="cc"></div></div><label>Anteckningar</label><textarea id="cx"></textarea><button onclick="addCustomer()">Spara kund</button><button class="alt" onclick="loadCustomers()">Ladda kunder</button><div id="customerlist" class="scroll"></div></div>
 <div id="companies" class="box view hidden"><h2>Företagsregister</h2><label>Företagsnamn</label><input id="fn"><div class="row"><div><label>Organisationsnummer</label><input id="fo"></div><div><label>E-post</label><input id="fe"></div></div><div class="row"><div><label>Telefon</label><input id="fp"></div><div><label>Ort</label><input id="fc"></div></div><label>Bransch</label><input id="fi"><label>Anteckningar</label><textarea id="fx"></textarea><button onclick="addCompany()">Spara företag</button><button class="alt" onclick="loadCompanies()">Ladda företag</button><div id="companylist" class="scroll"></div></div>
 <div id="requests" class="box view hidden"><h2>Uppdragsregister</h2><label>Kund</label><select id="rc"></select><label>Rubrik</label><input id="rt"><label>Beskrivning</label><textarea id="rd"></textarea><div class="row"><div><label>Ort</label><input id="rci"></div><div><label>Budget kr</label><input id="rb" type="number"></div></div><div class="row"><div><label>Önskat startdatum</label><input id="rdate" type="date"></div><div><label>Status</label><select id="rs"><option value="new">Nytt</option><option value="reviewing">Under granskning</option><option value="matching">Matchning</option><option value="waiting_for_customer">Inväntar kund</option><option value="assigned">Tilldelat</option><option value="completed">Slutfört</option><option value="cancelled">Avbrutet</option></select></div></div><button onclick="addRequest()">Spara uppdrag</button><button class="alt" onclick="loadRequests()">Ladda uppdrag</button><div id="requestlist" class="scroll"></div></div>
-<div id="assignments-admin" class="box view hidden"><h2>Bokning och provision</h2><p>Skapa bokning från en matchad leverantör. Kontakt måste vara godkänd.</p><label>Uppdrag</label><select id="booking-request" onchange="loadBookingMatches()"><option value="">Välj uppdrag</option></select><label>Godkänd leverantör</label><select id="booking-person"><option value="">Välj uppdrag först</option></select><div class="row"><div><label>Avtalat belopp (kr)</label><input id="booking-amount" type="number" min="0" step="0.01"></div><div><label>Provision (%)</label><input id="booking-rate" type="number" min="0" max="100" step="0.1"></div></div><div class="row"><div><label>Startdatum</label><input id="booking-start" type="date"></div><div><label>Slutdatum</label><input id="booking-end" type="date"></div></div><button onclick="createBooking()">Skapa bokning och provisionsunderlag</button><p id="booking-status" role="status"></p><h3>Bokningar</h3><div id="booking-list" class="scroll"></div><h3>Provisioner</h3><div id="commission-list" class="scroll"></div></div><div id="privacy" class="box view hidden"><h2>GDPR – rättighetsärenden</h2>
+<div id="assignments-admin" class="box view hidden"><h2>Bokning och provision</h2><p>Skapa bokning från en matchad leverantör. Kontakt måste vara godkänd.</p><label>Uppdrag</label><select id="booking-request" onchange="loadBookingMatches()"><option value="">Välj uppdrag</option></select><label>Godkänd leverantör</label><select id="booking-person"><option value="">Välj uppdrag först</option></select><div class="row"><div><label>Avtalat belopp (kr)</label><input id="booking-amount" type="number" min="0" step="0.01"></div><div><label>Provision (%)</label><input id="booking-rate" type="number" min="0" max="100" step="0.1"></div></div><div class="row"><div><label>Startdatum</label><input id="booking-start" type="date"></div><div><label>Slutdatum</label><input id="booking-end" type="date"></div></div><button onclick="createBooking()">Skapa bokning och provisionsunderlag</button><p id="booking-status" role="status"></p><h3>Ekonomisk översikt</h3><label>Period</label><select id="finance-period" onchange="loadBookings()"><option value="all">Hela perioden</option><option value="30">Senaste 30 dagarna</option><option value="year">Innevarande år</option></select><div id="finance-summary" class="grid"></div><p id="finance-note">Beloppen är baserade på registrerade bokningar och provisionsunderlag, inte bokförda intäkter.</p><h3>Bokningar</h3><div id="booking-list" class="scroll"></div><h3>Provisioner och betalningsstatus</h3><div id="commission-list" class="scroll"></div></div><div id="privacy" class="box view hidden"><h2>GDPR – rättighetsärenden</h2>
 <p>Registrera och följ upp begäran om tillgång, rättelse, radering eller andra dataskyddsrättigheter. Registrera bara nödvändiga uppgifter.</p>
 <div class="row"><div><label>Namn</label><input id="gname" maxlength="160"></div><div><label>E-post</label><input id="gemail" type="email" maxlength="254"></div></div>
 <div class="row"><div><label>Typ av begäran</label><select id="gtype"><option value="access">Tillgång/registerutdrag</option><option value="rectification">Rättelse</option><option value="erasure">Radering</option><option value="restriction">Begränsning</option><option value="objection">Invändning</option><option value="portability">Dataportabilitet</option><option value="withdraw_consent">Återkalla samtycke</option><option value="other">Annat</option></select></div><div><label>Sista svarsdag</label><input id="gdue" type="date"></div></div>
@@ -509,17 +509,49 @@ async function createBooking(){
  await loadBookings();stats();
 }
 async function loadBookings(){
- const box=$('booking-list'),comm=$('commission-list');
- const q=await db.from('assignments').select('id,request_id,person_id,status,agreed_amount,start_date,end_date,created_at').order('created_at',{ascending:false}).limit(200);
- if(q.error){box.textContent=q.error.message;return}
- const rids=[...new Set((q.data||[]).map(x=>x.request_id).filter(Boolean))],pids=[...new Set((q.data||[]).map(x=>x.person_id).filter(Boolean))];
+ const box=$('booking-list'),comm=$('commission-list'),summary=$('finance-summary');
+ const period=$('finance-period')?.value||'all';
+ let since=null;const now=new Date();
+ if(period==='30'){since=new Date(now);since.setDate(since.getDate()-30)}
+ if(period==='year')since=new Date(now.getFullYear(),0,1);
+ let aq=db.from('assignments').select('id,request_id,person_id,status,agreed_amount,start_date,end_date,created_at').order('created_at',{ascending:false}).limit(1000);
+ let cq=db.from('commissions').select('id,assignment_id,request_id,amount,assignment_value,commission_rate,commission_amount,status,due_date,paid_at,created_at').order('created_at',{ascending:false}).limit(1000);
+ if(since){aq=aq.gte('created_at',since.toISOString());cq=cq.gte('created_at',since.toISOString())}
+ const [a,c]=await Promise.all([aq,cq]);
+ if(a.error){box.textContent=a.error.message;return}
+ if(c.error){comm.textContent=c.error.message;return}
+ const assignments=a.data||[],commissions=c.data||[];
+ const validAssignments=assignments.filter(x=>x.status!=='cancelled');
+ const bookingValue=validAssignments.reduce((n,x)=>n+Number(x.agreed_amount||0),0);
+ const pending=commissions.filter(x=>x.status==='pending').reduce((n,x)=>n+Number(x.commission_amount??x.amount??0),0);
+ const approved=commissions.filter(x=>x.status==='approved').reduce((n,x)=>n+Number(x.commission_amount??x.amount??0),0);
+ const paid=commissions.filter(x=>x.status==='paid').reduce((n,x)=>n+Number(x.commission_amount??x.amount??0),0);
+ const cancelled=commissions.filter(x=>x.status==='cancelled').reduce((n,x)=>n+Number(x.commission_amount??x.amount??0),0);
+ const earned=pending+approved+paid;
+ const money=n=>Number(n||0).toLocaleString('sv-SE',{minimumFractionDigits:0,maximumFractionDigits:2})+' kr';
+ const metrics=[['Bokningsvärde',money(bookingValue)],['Beräknad provision',money(earned)],['Obetald provision',money(pending+approved)],['Inbetald provision',money(paid)],['Slutförda uppdrag',assignments.filter(x=>x.status==='completed').length],['Aktiva bokningar',assignments.filter(x=>['planned','ongoing'].includes(x.status)).length]];
+ summary.innerHTML=metrics.map(x=>'<div class="stat"><b>'+esc(x[1])+'</b>'+esc(x[0])+'</div>').join('');
+ const rids=[...new Set(assignments.map(x=>x.request_id).filter(Boolean))],pids=[...new Set(assignments.map(x=>x.person_id).filter(Boolean))];
  const [rq,pp]=await Promise.all([rids.length?db.from('requests').select('id,title,city').in('id',rids):Promise.resolve({data:[]}),pids.length?db.from('people').select('id,first_name,last_name').in('id',pids):Promise.resolve({data:[]})]);
  if(rq.error||pp.error){box.textContent=rq.error?.message||pp.error?.message;return}
  const rr=Object.fromEntries((rq.data||[]).map(x=>[x.id,x])),people=Object.fromEntries((pp.data||[]).map(x=>[x.id,x]));
- box.innerHTML=q.data?.length?'<table><tr><th>Uppdrag</th><th>Leverantör</th><th>Belopp</th><th>Datum</th><th>Status</th></tr>'+q.data.map(x=>'<tr><td>'+esc(rr[x.request_id]?.title||'—')+'</td><td>'+esc((people[x.person_id]?.first_name||'')+' '+(people[x.person_id]?.last_name||''))+'</td><td>'+Number(x.agreed_amount||0).toLocaleString('sv-SE')+' kr</td><td>'+esc(x.start_date||'Ej satt')+(x.end_date?' – '+esc(x.end_date):'')+'</td><td>'+esc(x.status)+'</td></tr>').join('')+'</table>':'<p>Inga bokningar ännu.</p>';
- const c=await db.from('commissions').select('assignment_value,commission_rate,commission_amount,status,due_date').order('created_at',{ascending:false}).limit(200);
- if(c.error){comm.textContent=c.error.message;return}
- comm.innerHTML=c.data?.length?'<table><tr><th>Uppdragsvärde</th><th>Provision</th><th>Belopp</th><th>Förfallodatum</th><th>Status</th></tr>'+c.data.map(x=>'<tr><td>'+Number(x.assignment_value||0).toLocaleString('sv-SE')+' kr</td><td>'+Number(x.commission_rate||0)+' %</td><td>'+Number(x.commission_amount||0).toLocaleString('sv-SE')+' kr</td><td>'+esc(x.due_date||'—')+'</td><td>'+esc(x.status)+'</td></tr>').join('')+'</table>':'<p>Inga provisioner registrerade.</p>';
+ box.innerHTML=assignments.length?'<table><tr><th>Uppdrag</th><th>Leverantör</th><th>Belopp</th><th>Datum</th><th>Status</th></tr>'+assignments.map(x=>'<tr><td>'+esc(rr[x.request_id]?.title||'—')+'</td><td>'+esc((people[x.person_id]?.first_name||'')+' '+(people[x.person_id]?.last_name||''))+'</td><td>'+money(x.agreed_amount)+'</td><td>'+esc(x.start_date||'Ej satt')+(x.end_date?' – '+esc(x.end_date):'')+'</td><td><select onchange="updateAssignmentStatus(\''+x.id+'\',this.value)"><option value="planned" '+(x.status==='planned'?'selected':'')+'>Planerad</option><option value="ongoing" '+(x.status==='ongoing'?'selected':'')+'>Pågår</option><option value="completed" '+(x.status==='completed'?'selected':'')+'>Slutförd</option><option value="cancelled" '+(x.status==='cancelled'?'selected':'')+'>Avbruten</option></select></td></tr>').join('')+'</table>':'<p>Inga bokningar i vald period.</p>';
+ comm.innerHTML=commissions.length?'<table><tr><th>Uppdragsvärde</th><th>Provision</th><th>Belopp</th><th>Förfallodatum</th><th>Status</th></tr>'+commissions.map(x=>'<tr><td>'+money(x.assignment_value)+'</td><td>'+Number(x.commission_rate||0)+' %</td><td>'+money(x.commission_amount??x.amount)+'</td><td>'+esc(x.due_date||'—')+'</td><td><select onchange="updateCommissionStatus(\''+x.id+'\',this.value)"><option value="pending" '+(x.status==='pending'?'selected':'')+'>Väntar</option><option value="approved" '+(x.status==='approved'?'selected':'')+'>Godkänd</option><option value="paid" '+(x.status==='paid'?'selected':'')+'>Betald</option><option value="cancelled" '+(x.status==='cancelled'?'selected':'')+'>Avbruten</option></select></td></tr>').join('')+'</table>':'<p>Inga provisioner i vald period.</p>';
+ $('finance-note').textContent='Summeringen gäller registrerade poster för vald period. Avbruten provision exkluderas från intjänad och obetald provision. Bokningsvärde är inte samma sak som NÄTVERKETs omsättning.';
+}
+async function updateAssignmentStatus(id,status){
+ if(!['planned','ongoing','completed','cancelled'].includes(status))return;
+ const {error}=await db.from('assignments').update({status}).eq('id',id);
+ $('booking-status').textContent=error?.message||'Bokningsstatus uppdaterad.';
+ if(!error)loadBookings();
+}
+async function updateCommissionStatus(id,status){
+ if(!['pending','approved','paid','cancelled'].includes(status))return;
+ const patch={status,updated_at:new Date().toISOString()};
+ patch.paid_at=status==='paid'?new Date().toISOString():null;
+ const {error}=await db.from('commissions').update(patch).eq('id',id);
+ $('booking-status').textContent=error?.message||'Provisionsstatus uppdaterad.';
+ if(!error)loadBookings();
 }
 async function loadProviderAdmin(){
  const select=$('provider-edit-id');
