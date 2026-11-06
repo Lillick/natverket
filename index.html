@@ -445,13 +445,9 @@ async function submitPublicForm(event,kind){
   const payload=Object.fromEntries(new FormData(form).entries());
   payload.kind=kind;
   if(kind==='person'){
-    const profileParts=[];
-    if(payload.interest_category)profileParts.push('Önskat område: '+payload.interest_category);
-    if(payload.work_type)profileParts.push('Önskad möjlighet: '+payload.work_type);
-    if(payload.experience)profileParts.push(payload.experience);
-    payload.experience=profileParts.join('\\n\\n').slice(0,3000);
-    delete payload.interest_category;
-    delete payload.work_type;
+    payload.interest_category=(payload.interest_category||'').slice(0,120);
+    payload.work_type=(payload.work_type||'').slice(0,80);
+    payload.experience=(payload.experience||'').slice(0,3000);
   }
   try{
     const response=await fetch(PUBLIC_INTAKE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
