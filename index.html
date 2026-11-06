@@ -522,16 +522,81 @@ function openRequestJourney(category, title){
  if(details)details.open=true;
  const categorySelect=document.getElementById('request-category');
  if(categorySelect){
-   const value=category||'Annat / vet inte ännu';
-   const option=[...categorySelect.options].find(o=>o.textContent.trim().toLowerCase()===value.toLowerCase());
-   categorySelect.value=option?option.value:'Annat / vet inte ännu';
+  const value=category||'Annat / vet inte ännu';
+  const option=[...categorySelect.options].find(o=>o.textContent.trim().toLowerCase()===value.toLowerCase());
+  categorySelect.value=option?option.value:'Annat / vet inte ännu';
  }
  const titleInput=document.querySelector('#request-form input[name="title"]');
- if(titleInput && title)titleInput.value=title;
+ const description=document.querySelector('#request-form textarea[name="description"]');
+ const journeys={
+  'Event & underhållning':{
+   intro:'Berätta om ditt event så hjälper vi dig hitta rätt underhållning eller leverantör.',
+   title:'Exempel: DJ till företagsfest, trubadur till bröllop eller quizvärd',
+   details:'När är eventet, var hålls det, ungefär hur många gäster kommer och vilken typ av underhållning söker du?'
+  },
+  'Bartender, servering & restaurang':{
+   intro:'Beskriv vilken restaurang- eller serveringspersonal du behöver och när.',
+   title:'Exempel: två bartendrar till lördagens event',
+   details:'Vilka roller behövs, hur många personer, datum, arbetstider och plats?'
+  },
+  'Personal & bemanning':{
+   intro:'Beskriv bemanningsbehovet så kan vi hjälpa dig hitta rätt kompetens.',
+   title:'Exempel: extra hotellpersonal under en konferens',
+   details:'Vilka arbetsuppgifter och kompetenser behövs, hur många personer, vilken period och vilka arbetstider?'
+  },
+  'Entrévärdar & publikvärdar':{
+   intro:'Berätta om arrangemanget och vilken typ av värdskap eller publikservice du behöver.',
+   title:'Exempel: fyra entrévärdar till ett kvällsevent',
+   details:'Beskriv eventet, datum, plats, antal värdar och arbetsuppgifter. Eventuella tillståndspliktiga bevakningstjänster måste utföras av behörig aktör.'
+  },
+  'Hemservice & hantverk':{
+   intro:'Beskriv arbetet som ska utföras och var du behöver hjälp.',
+   title:'Exempel: montera köksskåp eller reparera en dörr',
+   details:'Vad behöver göras, var finns arbetet och när vill du få det utfört? Berätta gärna om omfattning och material om du vet.'
+  },
+  'Flytt & bärhjälp':{
+   intro:'Beskriv flytten så blir det lättare att hitta rätt hjälp.',
+   title:'Exempel: bärhjälp vid flytt från två rum',
+   details:'Vilket datum, mellan vilka orter/adresser, ungefär hur mycket ska flyttas och behövs bil eller bara bärhjälp?'
+  },
+  'Hund- & kattpassning':{
+   intro:'Berätta om ditt djur och vilken typ av passning du söker.',
+   title:'Exempel: hundpassning under en helg',
+   details:'Vilket djur gäller det, vilka datum och tider, var behövs passningen och finns det särskilda rutiner eller behov?'
+  },
+  'IT & teknisk hjälp':{
+   intro:'Beskriv problemet eller tjänsten och vilken utrustning eller vilket system det gäller.',
+   title:'Exempel: hjälp med nätverk, dator eller företagets webbplats',
+   details:'Vad behöver du hjälp med, vilka system eller enheter gäller det och hur brådskande är det?'
+  },
+  'Transport & leverans':{
+   intro:'Beskriv vad som ska transporteras och när det behöver komma fram.',
+   title:'Exempel: budtransport av möbler inom Jönköping',
+   details:'Vad ska transporteras, var hämtas och lämnas det, vilket datum och finns det särskilda krav på fordon eller hantering?'
+  },
+  'Kurser & utbildning':{
+   intro:'Berätta vad du eller verksamheten vill lära er.',
+   title:'Exempel: HLR-utbildning för tio medarbetare',
+   details:'Vilket ämne, vilken nivå, antal deltagare, önskat datum och om utbildningen ska ske på plats eller digitalt?'
+  },
+  'Starta & utveckla företag':{
+   intro:'Beskriv var du befinner dig och vilket stöd du behöver för att komma vidare.',
+   title:'Exempel: hjälp med bokföring, registrering eller att hitta kunder',
+   details:'Vad vill du uppnå, vilken hjälp söker du och när behöver du komma igång?'
+  },
+  'Annat / vet inte ännu':{
+   intro:'Beskriv med egna ord vad du behöver hjälp med. Du behöver inte veta exakt vilken kategori som passar.',
+   title:'Beskriv kort vad du behöver hjälp med',
+   details:'Berätta gärna vad du vill få gjort, var och när.'
+  }
+ };
+ const journey=journeys[category]||journeys['Annat / vet inte ännu'];
+ if(titleInput){titleInput.value='';titleInput.placeholder=journey.title;}
+ if(description)description.placeholder=journey.details;
  const note=document.getElementById('category-selection-note');
- if(note){note.textContent=title?'Valt område: '+title+'. Fyll i formuläret så tar vi nästa steg.':'Beskriv vad du behöver hjälp med – du behöver inte kunna välja exakt kategori.';}
-  const context=document.getElementById('request-journey-context');
-  if(context){context.textContent=title?'Du vill ha hjälp med: '+title+'. Beskriv vad du söker så kan vi matcha dig med rätt person eller leverantör.':'Beskriv vad du behöver hjälp med – hemma, på jobbet eller vid ett event.';}
+ if(note)note.textContent=title?'Valt område: '+title+'. '+journey.intro:'Beskriv vad du behöver hjälp med – vi hjälper dig hitta rätt kategori.';
+ const context=document.getElementById('request-journey-context');
+ if(context)context.textContent=journey.intro;
  const target=document.querySelector('#behov details.audience-card');
  target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
 }
