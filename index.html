@@ -464,6 +464,63 @@ async function login(){let {error}=await db.auth.signInWithPassword({email:$('em
 async function checkAdmin(){let {data:{user}}=await db.auth.getUser();if(!user)return;let {data,error}=await db.from('profiles').select('role,full_name').eq('id',user.id).single();if(error||data?.role!=='admin'){msg('Kontot saknar adminbehörighet.');await db.auth.signOut();return} $('login').classList.add('hidden');$('app').classList.remove('hidden');await stats();await customerOptions();await requestOptions()}
 async function logout(){await db.auth.signOut();location.href='/?admin=1'}
 function tab(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('hidden',x.id!==id));if(id==='requests')loadRequests();if(id==='matches')requestOptions();if(id==='provider-profile-admin')loadProviderAdmin();if(id==='assignments-admin'){loadBookingRequests();loadBookings()}}
+
+async function loadBookingRequests(){
+ const q=await db.from('requests').select('id,title,city,status').order('created_at',{ascending:false}).limit(300);
+ if(q.error){$('booking-status').textContent=q.error.message;return}
+ $('booking-request').innerHTML='<option value="">Välj uppdrag</option>'+(q.data||[]).map(r=>'<option value="'+esc(r.id)+'">'+esc(r.title+' · '+(r.city||'')+' · '+r.status)+'</option>').join('');
+ $('booking-person').innerHTML='<option value="">Välj uppdrag först</option>';
+}
+async function loadBookingMatches(){
+ const id=$('booking-request').value;
+ if(!id){$('booking-person').innerHTML='<option value="">Välj uppdrag först</option>';return}
+ const q=await db.from('request_matches').select('person_id,match_score').eq('request_id',id).eq('contact_approved',true).in('status',['approved','contacted','accepted']).order('match_score',{ascending:false});
+ if(q.error){$('booking-status').textContent=q.error.message;return}
+ const ids=(q.data||[]).map(x=>x.person_id);
+ if(!ids.length){$('booking-person').innerHTML='<option value="">Inga godkända matchningar</option>';return}
+ const p=await db.from('people').select('id,first_name,last_name,city').in('id',ids);
+ if(p.error){$('booking-status').textContent=p.error.message;return}
+ const byId=Object.fromEntries((p.data||[]).map(x=>[x.id,x]));
+ $('booking-person').innerHTML='<option value="">Välj leverantör</option>'+(q.data||[]).filter(x=>byId[x.person_id]).map(x=>'<option value="'+esc(x.person_id)+'">'+esc(byId[x.person_id].first_name+' '+(byId[x.person_id].last_name||'')+' · '+(byId[x.person_id].city||'')+' · '+(x.match_score||0)+' p')+'</option>').join('');
+}
+async function createBooking(){
+ const requestId=$('booking-request').value,personId=$('booking-person').value;
+ const amount=Number($('booking-amount').value),rate=Number($('booking-rate').value);
+ const start=$('booking-start').value||null,end=$('booking-end').value||null;
+ const status=$('booking-status');status.textContent='';
+ if(!requestId||!personId)return status.textContent='Välj uppdrag och godkänd leverantör.';
+ if(!Number.isFinite(amount)||amount<=0)return status.textContent='Ange avtalat belopp över noll.';
+ if($('booking-rate').value===''||!Number.isFinite(rate)||rate<0||rate>100)return status.textContent='Ange avtalad provision mellan 0 och 100 procent.';
+ if(start&&end&&end<start)return status.textContent='Slutdatum kan inte vara före startdatum.';
+ const m=await db.from('request_matches').select('id').eq('request_id',requestId).eq('person_id',personId).eq('contact_approved',true).in('status',['approved','contacted','accepted']).maybeSingle();
+ if(m.error||!m.data)return status.textContent='Bokningen stoppades: godkänd kontaktmatchning saknas.';
+ const prior=await db.from('assignments').select('id').eq('request_id',requestId).eq('person_id',personId).neq('status','cancelled').limit(1);
+ if(prior.error)return status.textContent=prior.error.message;
+ if(prior.data?.length)return status.textContent='Det finns redan en aktiv bokning för denna kombination.';
+ const a=await db.from('assignments').insert({request_id:requestId,person_id:personId,status:'planned',agreed_amount:amount,start_date:start,end_date:end}).select('id').single();
+ if(a.error)return status.textContent=a.error.message;
+ const fee=Math.round(amount*rate)/100;
+ const c=await db.from('commissions').insert({assignment_id:a.data.id,request_id:requestId,amount:fee,assignment_value:amount,commission_rate:rate,commission_amount:fee,status:'pending',notes:'Provisionsunderlag från bokning.'});
+ if(c.error){const rollback=await db.from('assignments').delete().eq('id',a.data.id);return status.textContent='Provisionen kunde inte sparas: '+c.error.message+(rollback.error?' · Kontrollera bokningen manuellt.':' · Bokningen återställdes.')}
+ await db.from('requests').update({status:'assigned',updated_at:new Date().toISOString()}).eq('id',requestId);
+ await db.from('request_matches').update({status:'accepted',updated_at:new Date().toISOString()}).eq('id',m.data.id);
+ status.textContent='Bokning skapad. Beräknad provision: '+fee.toFixed(2)+' kr. Kontrollera avtal och fakturering separat.';
+ $('booking-amount').value='';$('booking-rate').value='';$('booking-start').value='';$('booking-end').value='';
+ await loadBookings();stats();
+}
+async function loadBookings(){
+ const box=$('booking-list'),comm=$('commission-list');
+ const q=await db.from('assignments').select('id,request_id,person_id,status,agreed_amount,start_date,end_date,created_at').order('created_at',{ascending:false}).limit(200);
+ if(q.error){box.textContent=q.error.message;return}
+ const rids=[...new Set((q.data||[]).map(x=>x.request_id).filter(Boolean))],pids=[...new Set((q.data||[]).map(x=>x.person_id).filter(Boolean))];
+ const [rq,pp]=await Promise.all([rids.length?db.from('requests').select('id,title,city').in('id',rids):Promise.resolve({data:[]}),pids.length?db.from('people').select('id,first_name,last_name').in('id',pids):Promise.resolve({data:[]})]);
+ if(rq.error||pp.error){box.textContent=rq.error?.message||pp.error?.message;return}
+ const rr=Object.fromEntries((rq.data||[]).map(x=>[x.id,x])),people=Object.fromEntries((pp.data||[]).map(x=>[x.id,x]));
+ box.innerHTML=q.data?.length?'<table><tr><th>Uppdrag</th><th>Leverantör</th><th>Belopp</th><th>Datum</th><th>Status</th></tr>'+q.data.map(x=>'<tr><td>'+esc(rr[x.request_id]?.title||'—')+'</td><td>'+esc((people[x.person_id]?.first_name||'')+' '+(people[x.person_id]?.last_name||''))+'</td><td>'+Number(x.agreed_amount||0).toLocaleString('sv-SE')+' kr</td><td>'+esc(x.start_date||'Ej satt')+(x.end_date?' – '+esc(x.end_date):'')+'</td><td>'+esc(x.status)+'</td></tr>').join('')+'</table>':'<p>Inga bokningar ännu.</p>';
+ const c=await db.from('commissions').select('assignment_value,commission_rate,commission_amount,status,due_date').order('created_at',{ascending:false}).limit(200);
+ if(c.error){comm.textContent=c.error.message;return}
+ comm.innerHTML=c.data?.length?'<table><tr><th>Uppdragsvärde</th><th>Provision</th><th>Belopp</th><th>Förfallodatum</th><th>Status</th></tr>'+c.data.map(x=>'<tr><td>'+Number(x.assignment_value||0).toLocaleString('sv-SE')+' kr</td><td>'+Number(x.commission_rate||0)+' %</td><td>'+Number(x.commission_amount||0).toLocaleString('sv-SE')+' kr</td><td>'+esc(x.due_date||'—')+'</td><td>'+esc(x.status)+'</td></tr>').join('')+'</table>':'<p>Inga provisioner registrerade.</p>';
+}
 async function loadProviderAdmin(){
  const select=$('provider-edit-id');
  const {data:people,error}=await db.from('people').select('id,first_name,last_name,email,city').order('created_at',{ascending:false}).limit(300);
