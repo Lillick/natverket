@@ -109,7 +109,7 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 @media(prefers-reduced-motion:reduce){.inspiration-live.is-changing .inspiration-content{animation:none}.inspiration-progress span{transition:none}}
 </style></head><body><header><div class="brand"><div class="brand-mark">N</div><div><div class="brand-name">NÄTVERKET</div><div class="brand-sub">En plattform. Fler möjligheter.</div></div></div></header><main>
 <section id="public-home" class="public-wrap">
-<nav class="public-nav"><div class="navlinks"><a href="#live">NÄTVERKET LIVE</a><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#utbildning">Utbildning</a><a href="#sa-fungerar">Så fungerar det</a><a href="#aterkommande-kunder">Återkommande kunder</a></div></nav>
+<nav class="public-nav"><div class="navlinks"><a href="#live">NÄTVERKET LIVE</a><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#utbildning">Utbildning</a><a href="#sa-fungerar">Så fungerar det</a><a href="#aterkommande-kunder">Återkommande kunder</a><a href="#affarsmodell">Affärsmodell</a></div></nav>
 <section class="public-hero"><div class="public-kicker">PRIVATPERSONER · FÖRETAG · BEMANNING · TJÄNSTER</div><h1>Rätt människor.<br><span>Rätt möjligheter.</span></h1><p>Hitta hjälp hemma, boka en utbildning, få tag på en akut bartender eller hitta rätt kompetens till företaget. NÄTVERKET samlar tjänster, människor och uppdrag på ett och samma ställe – med personlig förmedling när du behöver det.</p><div class="public-actions"><a href="#behov">Jag behöver hjälp</a><a class="secondary" href="#foretag">Vi är ett företag</a><a class="secondary" href="#uppdrag">Jag vill erbjuda mina tjänster</a></div></section>
 
 <section class="inspiration-live" id="inspiration-live" aria-label="Inspiration och exempel på uppdrag">
@@ -211,6 +211,19 @@ header{background:rgba(13,25,46,.97);border-bottom:0;padding:16px max(22px,calc(
 <div class="repeat-flow"><b>Så skapas återkomsten:</b><span>Behov</span><i>→</i><span>Matchning</span><i>→</i><span>Offert & bokning</span><i>→</i><span>Uppföljning</span><i>→</i><span>Nästa bokning</span></div>
 <p class="legal-note">Detta beskriver NÄTVERKETs produktinriktning. Kundkonto, meddelanden, offertflöde, bokningshistorik, återbokning och betalningslösning är ännu inte aktiverade i den publika webbplatsen. De byggs och säkerhetstestas innan riktiga kunduppgifter eller betalningar tas emot.</p>
 </section>
+<section class="public-section" id="affarsmodell">
+<div class="public-kicker">EN HÅLLBAR HYBRIDMODELL</div>
+<h2>Flera vägar till intäkter – en samlad marknadsplats</h2>
+<p class="public-intro">NÄTVERKET ska kunna skapa värde både när någon behöver snabb hjälp och när företag behöver en långsiktig samarbetspartner. Affärsmodellen kombinerar förmedling med återkommande tjänster för kunder och leverantörer.</p>
+<div class="repeat-grid">
+<article class="repeat-card"><span>NÄR ETT UPPDRAG BLIR AV</span><h3>Förmedlingsintäkt</h3><p>En tydligt redovisad provision eller avgift när en förmedlad affär genomförs, enligt avtal med berörda parter.</p></article>
+<article class="repeat-card"><span>FÖR ÅTERKOMMANDE KUNDER</span><h3>Företagspaket</h3><p>Företag kan på sikt köpa abonnemang för prioriterad hjälp, samlad uppdragshistorik, återkommande behov och enklare administration.</p></article>
+<article class="repeat-card"><span>FÖR LEVERANTÖRER</span><h3>Synlighet & verktyg</h3><p>Frivilliga betaltjänster kan ge verifierade leverantörer mer presentation, statistik och verktyg – utan att påverka kundens rätt att jämföra.</p></article>
+<article class="repeat-card"><span>STÖRRE BEHOV</span><h3>Partnerlösningar</h3><p>Större bemannings- och företagsuppdrag kan hanteras med särskilda avtal och tydlig ansvarsfördelning mellan kunden, leverantören och NÄTVERKET.</p></article>
+</div>
+<div class="launch-band"><h3 style="margin:0 0 7px;color:var(--navy)">Principen: NÄTVERKET äger kundresan – leverantören utför tjänsten</h3><p style="margin:0">Kunden ska kunna återkomma till samma konto och kontaktväg. Leverantören ska vara tydligt identifierad och ansvarar för sitt uppdrag. Betalning, provision och eventuella abonnemang aktiveras först när avtal, betalflöde, skatt och konsumentinformation är färdiggranskade.</p></div>
+<p class="legal-note">Detta är den planerade affärsmodellen, inte en uppgift om att betalningar eller abonnemang redan är aktiva. NÄTVERKET ska börja enkelt i Jönköping och bygga ut intäktsströmmarna efter faktisk efterfrågan.</p>
+</section>
 <section class="public-section" id="om"><div class="public-kicker">OM PLATTFORMEN</div><h2>Styrkan är människorna bakom kontakterna.</h2><p class="public-intro">NÄTVERKET bygger på lokal kännedom, relationer och förtroende. Vi tror att rätt kontakt ofta börjar med att någon lyssnar, förstår behovet och vet vem som kan hjälpa till. Därför ska du kunna vända dig till oss med både små vardagsproblem och stora företagsbehov.</p><p class="legal-note">Webbplatsen är under uppbyggnad. Funktioner för att skicka in förfrågningar och registrera intresse öppnas först när integritetsskydd, villkor och säker hantering är färdigställda.</p></section>
 <section class="public-section" id="formedling-och-ansvar">
 <div class="public-kicker">TYDLIGA ROLLER · TRYGGARE AFFÄRER</div>
@@ -271,7 +284,7 @@ async function submitPublicForm(event,kind){
     status.textContent=error.message||'Det gick inte att skicka. Försök igen senare.';
   }finally{button.disabled=false;}
 }
-function connect(){try{db=supabase.createClient($('url').value.trim(),$('key').value.trim());localStorage.setItem('nu',$('url').value.trim());localStorage.setItem('nk',$('key').value.trim());$('setup').classList.add('hidden');$('login').classList.remove('hidden')}catch(e){$('setupmsg').textContent=e.message}}
+function connect(){try{db=supabase.createClient($('url').value.trim(),$('key').value.trim());sessionStorage.setItem('nu',$('url').value.trim());sessionStorage.setItem('nk',$('key').value.trim());$('setup').classList.add('hidden');$('login').classList.remove('hidden')}catch(e){$('setupmsg').textContent=e.message}}
 async function login(){let {error}=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});$('loginmsg').textContent=error?.message||'Inloggad';if(!error)await checkAdmin()}
 async function checkAdmin(){let {data:{user}}=await db.auth.getUser();if(!user)return;let {data,error}=await db.from('profiles').select('role,full_name').eq('id',user.id).single();if(error||data?.role!=='admin'){msg('Kontot saknar adminbehörighet.');await db.auth.signOut();return} $('login').classList.add('hidden');$('app').classList.remove('hidden');await stats();await customerOptions();await requestOptions()}
 async function logout(){await db.auth.signOut();location.href='/?admin=1'}
@@ -330,5 +343,5 @@ function moveInspiration(step){inspirationIndex=(inspirationIndex+step+inspirati
 function restartInspiration(){if(inspirationTimer)clearInterval(inspirationTimer);if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)inspirationTimer=setInterval(()=>{inspirationIndex=(inspirationIndex+1)%inspirationSlides.length;showInspiration(inspirationIndex)},6500)}
 
 $('inspiration-prev').addEventListener('click',()=>moveInspiration(-1));$('inspiration-next').addEventListener('click',()=>moveInspiration(1));$('inspiration-live').addEventListener('mouseenter',()=>{if(inspirationTimer)clearInterval(inspirationTimer)});$('inspiration-live').addEventListener('mouseleave',restartInspiration);showInspiration(0);restartInspiration();
-window.addEventListener('load',async()=>{$('year').textContent=new Date().getFullYear();if(!adminMode)return;$('public-home').classList.add('hidden');let u=localStorage.getItem('nu'),k=localStorage.getItem('nk');if(u&&k){$('url').value=u;$('key').value=k;db=supabase.createClient(u,k);$('setup').classList.add('hidden');$('login').classList.remove('hidden');let {data:{session}}=await db.auth.getSession();if(session)await checkAdmin()}else{$('setup').classList.remove('hidden')}});
+window.addEventListener('load',async()=>{$('year').textContent=new Date().getFullYear();if(!adminMode)return;$('public-home').classList.add('hidden');localStorage.removeItem('nu');localStorage.removeItem('nk');let u=sessionStorage.getItem('nu'),k=sessionStorage.getItem('nk');if(u&&k){$('url').value=u;$('key').value=k;db=supabase.createClient(u,k);$('setup').classList.add('hidden');$('login').classList.remove('hidden');let {data:{session}}=await db.auth.getSession();if(session)await checkAdmin()}else{$('setup').classList.remove('hidden')}});
 </script></body></html>
