@@ -729,8 +729,13 @@ function openRequestJourney(category, title){
    title:'Exempel: budtransport av möbler inom Jönköping',
    details:'Vad ska transporteras, var hämtas och lämnas det, vilket datum och finns det särskilda krav på fordon eller hantering?'
   },
+  'Skärm & display – uthyrning och köp':{
+   intro:'Berätta om skärmen eller displaylösningen du vill hyra eller köpa.',
+   title:'Exempel: hyra LED-skärm till ett event eller köpa digitala menytavlor',
+   details:'Ska du hyra eller köpa? Beskriv användningsområde, storlek eller mått, antal skärmar, plats, datum och om du behöver transport, montering eller teknisk support.'
+  },
   'Kurser & utbildning':{
-   intro:'Berätta vad du eller verksamheten vill lära er.',
+   intro:'Berätta vad du eller verksamheten vill lära er.'
    title:'Exempel: HLR-utbildning för tio medarbetare',
    details:'Vilket ämne, vilken nivå, antal deltagare, önskat datum och om utbildningen ska ske på plats eller digitalt?'
   },
@@ -763,6 +768,7 @@ function openProviderJourney(){
 function categoryForCard(card){
  const title=(card.querySelector('h3')?.textContent||'').trim().toLocaleLowerCase('sv');
  const exact={
+  'skärmar & digitala displayer':'Skärm & display – uthyrning och köp','skärm- & displayleverantörer':'Skärm & display – uthyrning och köp',
   'dj & musik':'Event & underhållning','trubadurer & artister':'Event & underhållning','quiz & värdar':'Event & underhållning','catering & fest':'Event & underhållning',
   'hantverk & montering':'Hemservice & hantverk','hemservice':'Hemservice & hantverk','personal & bemanning':'Personal & bemanning','it & företagstjänster':'IT & teknisk hjälp',
   'transport & leverans':'Transport & leverans','fastighet & bostad':'Hemservice & hantverk','hund- & kattvakt':'Hund- & kattpassning',
@@ -778,7 +784,8 @@ function categoryForCard(card){
  if(exact[title])return exact[title];
  const text=(title+' '+(card.querySelector('small')?.textContent||'')+' '+(card.querySelector('p')?.textContent||'')).toLocaleLowerCase('sv');
  const rules=[
-  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar'],
+  [/skärm|display|led|menytavla|storbild/,'Skärm & display – uthyrning och köp'],
+  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar']
   [/hund|katt|djur/,'Hund- & kattpassning'],
   [/bartender|server|kock|köks|disk|restaurang|barpersonal/,'Bartender, servering & restaurang'],
   [/transport|leverans|bud|logistik|lager/,'Transport & leverans'],
