@@ -735,7 +735,7 @@ function openRequestJourney(category, title){
    details:'Ska du hyra eller köpa? Beskriv användningsområde, storlek eller mått, antal skärmar, plats, datum och om du behöver transport, montering eller teknisk support.'
   },
   'Kurser & utbildning':{
-   intro:'Berätta vad du eller verksamheten vill lära er.'
+   intro:'Berätta vad du eller verksamheten vill lära er.',
    title:'Exempel: HLR-utbildning för tio medarbetare',
    details:'Vilket ämne, vilken nivå, antal deltagare, önskat datum och om utbildningen ska ske på plats eller digitalt?'
   },
@@ -785,7 +785,7 @@ function categoryForCard(card){
  const text=(title+' '+(card.querySelector('small')?.textContent||'')+' '+(card.querySelector('p')?.textContent||'')).toLocaleLowerCase('sv');
  const rules=[
   [/skärm|display|led|menytavla|storbild/,'Skärm & display – uthyrning och köp'],
-  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar']
+  [/entré|publik|trygghet|kövärd|bevakning|säkerhet/,'Entrévärdar & publikvärdar'],
   [/hund|katt|djur/,'Hund- & kattpassning'],
   [/bartender|server|kock|köks|disk|restaurang|barpersonal/,'Bartender, servering & restaurang'],
   [/transport|leverans|bud|logistik|lager/,'Transport & leverans'],
