@@ -374,7 +374,7 @@ body{background:#f4f7fb}
  <div class="inspiration-progress"><span id="inspiration-progress"></span></div>
 </section>
 
-<section class="public-section" id="behov"><div class="public-kicker">EN ENKEL VÄG TILL RÄTT HJÄLP</div><h2>Vad vill du ha hjälp med?</h2><p class="public-intro">Boka en tjänst, hitta personal eller få hjälp med något hemma eller på jobbet. Välj ett område så anpassar vi nästa steg efter det du söker.</p><div class="audience-grid"><details class="audience-card"><summary><div class="eyebrow">FÖR PRIVATPERSONER & FÖRETAG</div><h3>Jag behöver hjälp eller vill boka en tjänst</h3><p>Allt från DJ och eventpersonal till hantverkare, bemanning, IT, hemservice och andra tjänster.</p><span class="card-action">Läs mer <b>＋</b></span></summary><div class="card-expanded"><p id="request-journey-context">Beskriv vad du behöver hjälp med – hemma, på jobbet eller vid ett event. Vi hjälper dig vidare till rätt person eller leverantör.</p><form class="intake-form" id="request-form" onsubmit="submitPublicForm(event,'request')">
+<section class="public-section" id="behov"><div class="public-kicker">EN ENKEL VÄG TILL RÄTT HJÄLP</div><h2>Berätta vad du behöver – vi hjälper dig vidare</h2><p class="public-intro">Boka en tjänst, hitta personal eller få hjälp med något hemma eller på jobbet. Välj ett område så anpassar vi nästa steg efter det du söker.</p><div class="audience-grid"><details class="audience-card"><summary><div class="eyebrow">FÖR PRIVATPERSONER & FÖRETAG</div><h3>Jag behöver hjälp eller vill boka en tjänst</h3><p>Allt från DJ och eventpersonal till hantverkare, bemanning, IT, hemservice och andra tjänster.</p><span class="card-action">Läs mer <b>＋</b></span></summary><div class="card-expanded"><p id="request-journey-context">Beskriv vad du behöver hjälp med – hemma, på jobbet eller vid ett event. Vi hjälper dig vidare till rätt person eller leverantör.</p><form class="intake-form" id="request-form" onsubmit="submitPublicForm(event,'request')">
 <label>Jag är</label><select name="customer_type" required><option value="private">Privatperson</option><option value="business">Företag</option></select>
 <label>Namn</label><input name="name" autocomplete="name" maxlength="160" required>
 <label>E-post</label><input name="email" type="email" autocomplete="email" maxlength="254" required>
@@ -400,7 +400,7 @@ body{background:#f4f7fb}
 <button type="submit" disabled>Skicka intresseanmälan – öppnar snart</button>
 </form></div></details></div></section>
 <section class="public-section" id="tjanster">
-<div class="public-kicker">UPPTÄCK NÄTVERKET</div><h2>Vad vill du hitta hjälp med?</h2>
+<div class="public-kicker">UPPTÄCK NÄTVERKET</div><h2>Utforska tjänster och möjligheter</h2>
 <p class="public-intro">Välj ett område och upptäck människor, tjänster och möjligheter. Vi hjälper dig från första frågan till rätt kontakt.</p>
 <div class="category-search" role="search"><span aria-hidden="true">⌕</span><input id="category-search-input" type="search" placeholder="Sök bland tjänster, t.ex. hundvakt, kock eller IT" aria-label="Sök bland tjänster"><span class="category-search-count" id="category-search-count">Alla områden</span></div>
 <div class="category-grid" id="main-category-grid">
@@ -821,7 +821,7 @@ function openRequestJourney(category, title){
   'IT & teknisk hjälp':{
    intro:'Du behöver inte kunna tekniska ord. Berätta bara vad som inte fungerar eller vad du vill lära dig.',
    title:'Exempel: hjälp med mobil, dator, skrivare eller wifi hemma',
-   details:'Vad vill du ha hjälp med? Exempelvis mobil, surfplatta, dator, skrivare, wifi, e-post, videosamtal eller att komma igång med en app. Skriv gärna vad du försökt göra – du behöver inte kunna förklara tekniskt.'
+   details:'Beskriv gärna vilken teknik det gäller – mobil, surfplatta, dator, skrivare, wifi, e-post eller en app. Skriv vad du försökt göra; du behöver inte kunna förklara tekniskt.'
   },
   'Transport & leverans':{
    intro:'Beskriv vad som ska transporteras och när det behöver komma fram.',
