@@ -274,6 +274,29 @@ body{background:#f4f7fb}
 #behov .audience-card summary:focus-visible{outline:3px solid var(--gold);outline-offset:5px;border-radius:12px}
 .public-nav a:focus-visible,.public-footer a:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:7px}
 
+
+/* Separata och tydliga ingångar för privatpersoner och företag */
+.audience-hubs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+.audience-hub{background:#fff;border:1px solid #dce8ec;border-radius:20px;padding:clamp(22px,3vw,32px);box-shadow:0 10px 28px rgba(16,36,59,.06);scroll-margin-top:20px}
+.audience-hub.business{background:linear-gradient(135deg,#10243b,#183b55);border-color:#183b55}
+.audience-hub h2,.business-provider-panel h2{font-size:clamp(25px,3vw,34px);margin:8px 0;color:#10243b}
+.audience-hub.business h2{color:#fff}
+.audience-hub>p{line-height:1.65}
+.audience-hub.business>p{color:#e2edf2}
+.hub-actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.hub-actions a{display:inline-block;text-decoration:none;border-radius:10px;padding:12px 15px;background:#12a89a;color:#082e38;font-weight:800}
+.audience-hub.business .hub-actions a{background:#14b8a6}
+.hub-actions a.outline{background:transparent;border:1px solid #b9d5dd;color:#fff}
+.hub-note{font-size:13px;margin-bottom:0}
+.audience-hub.business .hub-note{color:#c9dce6}
+.business-provider-panel{background:#fff;border:1px solid #dce8ec;border-radius:20px;padding:clamp(22px,3vw,32px);margin:18px 0;scroll-margin-top:20px}
+.provider-fields-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+.provider-fields-preview>div{padding:15px;border:1px solid #e0e9ee;border-radius:12px;background:#f7fafb}
+.provider-fields-preview strong,.provider-fields-preview span{display:block}
+.provider-fields-preview strong{color:#183653;margin-bottom:4px}
+.provider-fields-preview span{font-size:13px;color:#607386;line-height:1.45}
+.provider-closed{background:#fff8e7;border:1px solid #f1dfae;border-radius:10px;padding:13px 15px;color:#6b5a2b;font-size:13px}
+@media(max-width:760px){.audience-hubs{grid-template-columns:1fr}.provider-fields-preview{grid-template-columns:1fr}}
 /* Enkel hjälp – extra tydlig väg för ovana digitala användare */
 .easy-help{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;margin:22px 0 12px;padding:clamp(22px,4vw,38px);border:1px solid #d8e9e7;border-radius:22px;background:linear-gradient(125deg,#eaf7f5,#f5f8fc);box-shadow:0 10px 28px rgba(16,36,59,.055)}
 .easy-help-kicker{display:inline-block;color:#087f78;font-size:11px;font-weight:850;letter-spacing:1.4px;margin-bottom:9px}
@@ -292,9 +315,35 @@ body{background:#f4f7fb}
 @media(max-width:420px){.easy-help-options{grid-template-columns:1fr}}
 </style></head><body><header><div class="brand"><div class="brand-mark">N</div><div><div class="brand-name">NÄTVERKET</div><div class="brand-sub">En plattform. Fler möjligheter.</div></div></div></header><main>
 <section id="public-home" class="public-wrap">
-<nav class="public-nav" aria-label="Huvudmeny"><a class="nav-home" href="#public-home" aria-label="NÄTVERKET startsida">NÄTVERKET</a><div class="navlinks"><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#live">Möjligheter</a><a href="#sa-fungerar">Så fungerar det</a></div><a class="nav-cta" href="#behov">Kom igång</a></nav>
-<section class="public-hero"><div class="public-kicker">EN PLATS FÖR HJÄLP, JOBB & TJÄNSTER</div><h1>Vad behöver du hjälp med? <span>Eller vill du hitta nya uppdrag?</span></h1><p>Hitta rätt person för jobbet, få extra personal eller erbjud din kompetens. NÄTVERKET gör det enklare att hitta varandra – för privatpersoner och företag.</p><div class="public-actions"><a href="#behov" class="hero-choice"><span class="choice-icon" aria-hidden="true">⌕</span><strong>Jag behöver hjälp</strong><span>Hitta en tjänst, person eller företag</span><b>Hitta hjälp <span aria-hidden="true">→</span></b></a><a href="#uppdrag" class="secondary hero-choice"><span class="choice-icon" aria-hidden="true">↗</span><strong>Jag söker uppdrag</strong><span>Hitta kunder, extrajobb och möjligheter</span><b>Hitta uppdrag <span aria-hidden="true">→</span></b></a></div><div class="hero-assurance"><span>✓ För privatpersoner</span><span>✓ För företag</span><span>✓ För dig som vill jobba extra</span></div></section>
+<nav class="public-nav" aria-label="Huvudmeny"><a class="nav-home" href="#public-home" aria-label="NÄTVERKET startsida">NÄTVERKET</a><div class="navlinks"><a href="?audience=private#privat-start">Privat</a><a href="?audience=business#foretag-start">Företag</a><a href="#tjanster">Tjänster</a><a href="#bemanning">Bemanning</a><a href="#sa-fungerar">Så fungerar det</a></div><a class="nav-cta" href="#valj-ingang">Kom igång</a></nav>
+<section class="public-hero"><div class="public-kicker">EN PLATS FÖR HJÄLP, JOBB & TJÄNSTER</div><h1>Vad behöver du hjälp med? <span>Eller vill du hitta nya uppdrag?</span></h1><p>Hitta rätt person för jobbet, få extra personal eller erbjud din kompetens. NÄTVERKET gör det enklare att hitta varandra – för privatpersoner och företag.</p><div class="public-actions"><a href="?audience=private#privat-start" class="hero-choice"><span class="choice-icon" aria-hidden="true">⌂</span><strong>Privat</strong><span>Hjälp hemma eller erbjud dina tjänster</span><b>Gå till privat <span aria-hidden="true">→</span></b></a><a href="?audience=business#foretag-start" class="secondary hero-choice"><span class="choice-icon" aria-hidden="true">▦</span><strong>Företag</strong><span>Köp tjänster eller bli leverantör</span><b>Gå till företag <span aria-hidden="true">→</span></b></a></div><div class="hero-assurance"><span>✓ För privatpersoner</span><span>✓ För företag</span><span>✓ För dig som vill jobba extra</span></div></section>
 
+
+<section class="audience-hubs" id="valj-ingang" aria-label="Välj privat eller företag">
+ <div class="audience-hub" id="privat-start">
+  <span class="public-kicker">NÄTVERKET PRIVAT</span><h2>För dig som privatperson</h2>
+  <p>Behöver du hjälp hemma, med tekniken eller vill du erbjuda dina tjänster och hitta uppdrag?</p>
+  <div class="hub-actions"><a href="#behov" onclick="openRequestJourney('Hemservice & hantverk','Hjälp hemma');return false;">Jag behöver hjälp</a><a href="#uppdrag" onclick="document.querySelector('#uppdrag').open=true;document.querySelector('#uppdrag').scrollIntoView({behavior:'smooth'});return false;">Jag vill erbjuda mina tjänster</a></div>
+  <p class="hub-note">En enkel väg till hemservice, IT-hjälp, hantverk, flytt, djurpassning och extrajobb.</p>
+ </div>
+ <div class="audience-hub business" id="foretag-start">
+  <span class="public-kicker">NÄTVERKET FÖRETAG</span><h2>För företag och organisationer</h2>
+  <p>Behöver ni köpa en tjänst, hitta personal eller vill ert företag erbjuda tjänster genom NÄTVERKET?</p>
+  <div class="hub-actions"><a href="#behov" onclick="openBusinessRequest();return false;">Vi behöver hjälp eller personal</a><a href="#company-provider" class="outline">Vi vill bli leverantör</a></div>
+  <p class="hub-note">För företag inom exempelvis IT, hantverk, hemservice, bemanning, event, transport och skärm/display.</p>
+ </div>
+</section>
+<section class="business-provider-panel" id="company-provider">
+ <span class="public-kicker">BLI LEVERANTÖR</span><h2>Registrera ert företag</h2>
+ <p>Vi förbereder företagsregistreringen så att företag kan anmäla intresse för att erbjuda tjänster och ta emot relevanta uppdrag.</p>
+ <div class="provider-fields-preview">
+  <div><strong>Företagsuppgifter</strong><span>Företagsnamn, organisationsnummer och webbplats</span></div>
+  <div><strong>Kontaktperson</strong><span>Namn, e-post och telefon för företagets kontaktperson</span></div>
+  <div><strong>Era tjänster</strong><span>Bransch, tjänster och geografiskt arbetsområde</span></div>
+  <div><strong>Kontroll före publicering</strong><span>Företagsuppgifter och relevanta behörigheter kontrolleras innan profilen publiceras</span></div>
+ </div>
+ <p class="provider-closed" role="status"><strong>Företagsregistreringen förbereds.</strong> Inga uppgifter samlas in här ännu. Vi öppnar den först när integritetsinformationen, gallringsrutinen och den säkra mottagningen är färdigställda.</p>
+</section>
 <section class="easy-help" id="enkel-hjalp" aria-labelledby="easy-help-title">
  <div class="easy-help-copy">
   <span class="easy-help-kicker">DU BEHÖVER INTE KUNNA TEKNIK</span>
@@ -708,9 +757,20 @@ function moveInspiration(step){inspirationIndex=(inspirationIndex+step+inspirati
 function restartInspiration(){if(inspirationTimer)clearInterval(inspirationTimer);if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)inspirationTimer=setInterval(()=>{inspirationIndex=(inspirationIndex+1)%inspirationSlides.length;showInspiration(inspirationIndex)},6500)}
 
 const inspirationPanel=$('inspiration-live'),inspirationSwipeArea=$('inspiration-content');$('inspiration-prev').addEventListener('click',event=>{event.preventDefault();event.stopPropagation();moveInspiration(-1)});$('inspiration-next').addEventListener('click',event=>{event.preventDefault();event.stopPropagation();moveInspiration(1)});let inspirationTouchStartX=0;inspirationSwipeArea.addEventListener('touchstart',event=>{inspirationTouchStartX=event.changedTouches[0].clientX},{passive:true});inspirationSwipeArea.addEventListener('touchend',event=>{const delta=event.changedTouches[0].clientX-inspirationTouchStartX;if(Math.abs(delta)>40)moveInspiration(delta<0?1:-1)},{passive:true});inspirationPanel.addEventListener('mouseenter',()=>{if(inspirationTimer)clearInterval(inspirationTimer)});inspirationPanel.addEventListener('mouseleave',restartInspiration);inspirationPanel.addEventListener('keydown',event=>{if(event.key==='ArrowRight')moveInspiration(1);if(event.key==='ArrowLeft')moveInspiration(-1)});showInspiration(0);restartInspiration();
-window.addEventListener('load',async()=>{$('year').textContent=new Date().getFullYear();if(!adminMode)return;$('public-home').classList.add('hidden');localStorage.removeItem('nu');localStorage.removeItem('nk');let u=sessionStorage.getItem('nu'),k=sessionStorage.getItem('nk');if(u&&k){$('url').value=u;$('key').value=k;db=supabase.createClient(u,k);$('setup').classList.add('hidden');$('login').classList.remove('hidden');let {data:{session}}=await db.auth.getSession();if(session)await checkAdmin()}else{$('setup').classList.remove('hidden')}});
+window.addEventListener('load',async()=>{$('year').textContent=new Date().getFullYear();const audience=new URLSearchParams(location.search).get('audience');if(audience==='private'){document.getElementById('foretag-start')?.classList.add('hidden');document.getElementById('company-provider')?.classList.add('hidden');document.getElementById('privat-start')?.scrollIntoView({block:'start'});}else if(audience==='business'){document.getElementById('privat-start')?.classList.add('hidden');document.getElementById('foretag-start')?.scrollIntoView({block:'start'});}if(!adminMode)return;$('public-home').classList.add('hidden');localStorage.removeItem('nu');localStorage.removeItem('nk');let u=sessionStorage.getItem('nu'),k=sessionStorage.getItem('nk');if(u&&k){$('url').value=u;$('key').value=k;db=supabase.createClient(u,k);$('setup').classList.add('hidden');$('login').classList.remove('hidden');let {data:{session}}=await db.auth.getSession();if(session)await checkAdmin()}else{$('setup').classList.remove('hidden')}});
 
 /* Make every category card lead to a useful next step and preserve the selected category. */
+function openBusinessRequest(){
+ const details=document.querySelector('#behov details.audience-card');
+ if(details)details.open=true;
+ const type=document.querySelector('#request-form select[name="customer_type"]');
+ if(type)type.value='business';
+ const title=document.querySelector('#request-form input[name="title"]');
+ if(title)title.placeholder='Exempel: extra personal till event, IT-support eller löpande service';
+ const context=document.getElementById('request-journey-context');
+ if(context)context.textContent='Beskriv vad ert företag behöver hjälp med, till exempel personal, en leverantör eller en återkommande tjänst.';
+ document.getElementById('behov')?.scrollIntoView({behavior:'smooth'});
+}
 function openRequestJourney(category, title){
  const details=document.querySelector('#behov details.audience-card');
  if(details)details.open=true;
