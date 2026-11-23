@@ -6,6 +6,7 @@ NÄTVERKET är en tidig webb-MVP med publik informationssida och separat adminis
 - `index.html` – publik webbplats och admin-MVP.
 - `supabase/SECURITY_AUDIT.sql` – read-only SQL-kontroller av RLS, policyer, funktioner och privilegier.
 - `supabase/PRODUCTION_HARDENING.sql` – samlad, idempotent databasmigrering för anonym åtkomst, RPC-behörigheter, aktiv matchning, GDPR-ärenderegister och metadata-baserad revisionslogg.
+- `supabase/PUBLIC_INTAKE_FUNCTIONS.sql` – aktuell definition och behörigheter för de tre server-side intagsfunktionerna.
 - `docs/LAUNCH_CHECKLIST.md` – lanserings- och dataskyddskrav.
 
 ## Drift
