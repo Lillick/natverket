@@ -86,15 +86,15 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [x] Samtliga 8 SECURITY DEFINER-funktioner som Supabase varnar för har kontrollerats. De administrativa funktionerna kontrollerar `public.is_admin()`; `is_admin()` lämnar endast ett booleskt svar. Varningarna ska ändå följas upp genom negativa tester och minsta möjliga EXECUTE-behörighet.
 - [x] Aktiv Supabase Edge Function `public-intake` är version 8. Den har `INTAKE_ENABLED = false`, så den avvisar anrop innan den läser eller sparar formulärdata.
 - [x] Publik HTML saknar service-role-nyckel; förekomsten av texten `service_role` är en instruktion att aldrig använda nyckeln i webbläsaren.
-- [x] Statisk kontroll av `index.html`: inga dubbla id:n och inga brutna interna ankarlänkar. Tre formulär finns; alla tre skicka-knappar är avstängda.
+- [x] Statisk kontroll av index.html: inga dubbla id:n och inga brutna interna ankarlänkar. Två publika intagsformulär har avstängda skicka-knappar; det tredje är en inaktiv förhandsvisning av företagsregistrering med samtliga fält avstängda.
 
 ### Kvarstående tekniska punkter
 - [ ] Supabase Auth: leaked-password protection är avstängd och ska aktiveras.
 - [ ] Testa åtkomst med anonym besökare, vanlig inloggad användare och administratör i verkliga sessionsflöden.
 - [ ] Genomför fullständig hemlighetsgranskning av hela det publika GitHub-repot och historiken, inte bara startsidan.
 - [ ] Lägg till och verifiera CSP efter att tillåtna externa bild-, script- och API-källor har kartlagts. Startsidan laddar Supabase JS från jsDelivr och bilder från externa bildkällor.
-- [ ] Lägg till canonical URL och Open Graph-metadata samt kontrollera favicon, sitemap och robots.txt.
-- [ ] Vercel: verifiera produktionsdeployment, preview, rollback, miljövariabler, headers och domän via den redan anslutna Vercel-integrationen.
+- [x] Canonical URL, Open Graph- och Twitter-metadata har lagts till på arbetsgrenen. Favicon, sitemap och robots.txt återstår att kontrollera.
+- [ ] Vercel: GitHub rapporterar lyckad Vercel-kontroll för senaste arbetsgrenscommit. Verifiera fortfarande Preview visuellt, faktiska HTTP-headers, produktionsdeployment, rollback, miljövariabler och domän.
 - [ ] Kontrollera backup och återställning, loggning, e-postaviseringar och incidentflöde.
 - [ ] Genomför mobil-/desktop-acceptanstest och tillgänglighetskontroll.
 - [ ] Juridisk identitet, personuppgiftsansvarig, kontaktuppgifter, rättsliga grunder, lagringstider, biträden/överföringar och slutliga villkor måste fastställas före personuppgiftsinsamling.
@@ -108,3 +108,34 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - 141 direkta tabellbehörigheter för rollen authenticated finns i databasen, men RLS-policyerna begränsar åtkomsten. Dessa ska inte bedömas enbart utifrån antalet grants; de måste testas med vanliga användarkonton.
 - De två tabellerna utan RLS-policy är avsiktligt stängda för klientroller. Skapa inte en publik policy bara för att få bort en INFO-varning.
 - Att en Edge Function har `verify_jwt = false` innebär att den är nåbar utan Supabase-inloggning. Den måste därför ha egen skyddskontroll. Just nu är intake-funktionen dessutom hårt avstängd; aktivera den inte innan hela lanseringsspärrlistan är godkänd.
+
+## Ytterligare bygg- och testresultat – 2026-11-23
+
+### Gjort i arbetsgrenen
+- [x] Startsidan har nu tydliga Privat- och Företag-ingångar i toppmenyn och heron.
+- [x] ?audience=private och ?audience=business styr respektive ingång och döljer irrelevanta delar.
+- [x] Kategoriklick leder till kundförfrågningsflödet och förväljer rätt kategori; företagskategorier förväljer företag som kundtyp.
+- [x] Individuell leverantörs-/uppdragslänk öppnar rätt personflöde i stället för företagsregistreringen.
+- [x] Tidigare oåtkomlig kod efter tidiga return-satser är rättad i de tre flödesfunktionerna.
+- [x] Företagsregistreringens inaktiva förhandsvisning är utökad med kontaktperson, företagskontakt, webbplats, frivilligt Instagram-namn, köp-/säljinriktning, tjänsteområde, geografiskt område, presentation, F-skatt, försäkring och behörigheter.
+- [x] Förhandsvisningen visas, men samtliga fält och knappen är avstängda. De två publika intagsformulären är fortfarande dolda och deras skicka-knappar är avstängda.
+- [x] Canonical URL samt Open Graph- och Twitter-metadata finns på arbetsgrenen.
+
+### Statisk kvalitetssäkring av arbetsgrenen
+- [x] 133 HTML-id:n kontrollerade: inga dubbletter.
+- [x] Interna ankarlänkar kontrollerade: inga saknade mål.
+- [x] 41 visuella tjänstekort och 4 företagskort kontrollerade mot tillåtna kategorier i förfrågningsformuläret: samtliga mappas till giltig kategori.
+- [x] 11 nuvarande spårade filer genomsökta efter vanliga mönster för privata nycklar, GitHub-token, Stripe-hemligheter, Supabase secret keys, AWS-nycklar och Slack-token: inga träffar. Detta är inte en fullständig historikgranskning.
+- [x] Supabase-funktionernas definitioner granskade: samtliga åtta varnade SECURITY DEFINER-funktioner har tom search_path; administrativa skrivfunktioner kontrollerar public.is_admin(), och katalog-/sökfunktionerna lämnar endast data när admin-kontrollen passerar.
+- [x] Simulerat icke-admin-anrop med databasrollen authenticated: samtliga skyddade skrivfunktioner avvisade anropet och adminbegränsade läsningar returnerade inga rader. Test med riktiga användarsessioner återstår.
+- [x] Vercels statuskontroll rapporterar success för senaste kontrollerade arbetsgrenscommit 0e19819d950a1e0aff4309d5180e2cf62f91958f.
+
+### Fortfarande blockerande före publik datainsamling
+- [ ] Aktivera Supabase Auth leaked-password protection.
+- [ ] Testa med riktiga sessioner: utloggad besökare, vanlig inloggad användare och administratör.
+- [ ] Granska Git-historikens tidigare commits för eventuella borttagna hemligheter; nuvarande filträd är skannat men historiken är inte fullständigt verifierad.
+- [ ] Verifiera Vercel Preview i webbläsare och kontrollera faktiska HTTP-headers.
+- [ ] CSP kräver först att inline-script, inline-stilar och inline-händelsehanterare kartläggs eller flyttas ut; lägg inte in en policy som bryter fungerande flöden eller ger falsk säkerhet.
+- [ ] Slutför personuppgiftsansvarig, kontaktuppgifter, integritetsinformation, rättsliga grunder, gallringstider, leverantörs-/biträdesavtal och villkor.
+- [ ] Testa backup/återställning, aviseringar, incidentflöde samt mobil- och desktopbeteende.
+- [ ] PR #1 är fortfarande draft och omärkt som mergead. Ingen av dessa ändringar är publicerad på main.
