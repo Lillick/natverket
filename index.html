@@ -773,8 +773,21 @@ async function addPrivacyRequest(){
  if(!error){$('gname').value='';$('gemail').value='';$('gdetails').value='';$('gdue').value='';loadPrivacy();}
 }
 async function loadPrivacy(){
- const {data,error}=await db.from('privacy_requests').select('requester_name,requester_email,request_type,status,received_at,due_date,completed_at').order('received_at',{ascending:false}).limit(100);
- $('privacylist').innerHTML=error?.message||tbl(data,[['requester_name','Namn'],['requester_email','E-post'],['request_type','Typ'],['status','Status'],['received_at','Inkommen'],['due_date','Sista dag'],['completed_at','Avslutad']]);
+ const {data,error}=await db.from('privacy_requests').select('id,requester_name,requester_email,request_type,status,received_at,due_date,completed_at,internal_notes').order('received_at',{ascending:false}).limit(100);
+ if(error){$('privacylist').textContent=error.message;return}
+ if(!data?.length){$('privacylist').innerHTML='<p>Inga registrerade dataskyddsärenden.</p>';return}
+ const labels={new:'Nytt',in_progress:'Pågår',completed:'Avslutat',rejected:'Avslaget'};
+ $('privacylist').innerHTML='<table><thead><tr><th>Begäran</th><th>Inkommen</th><th>Sista svarsdag</th><th>Status</th><th>Intern anteckning</th><th>Åtgärd</th></tr></thead><tbody>'+
+ data.map(x=>'<tr><td><b>'+esc(x.requester_name)+'</b><br><a href="mailto:'+esc(x.requester_email)+'">'+esc(x.requester_email)+'</a><br>'+esc(x.request_type)+'</td><td>'+new Date(x.received_at).toLocaleString('sv-SE')+'</td><td>'+esc(x.due_date||'—')+'</td><td><select id="privacy-status-'+x.id+'">'+Object.entries(labels).map(([k,v])=>'<option value="'+k+'" '+(x.status===k?'selected':'')+'>'+v+'</option>').join('')+'</select></td><td><textarea id="privacy-notes-'+x.id+'" maxlength="2000" placeholder="Intern anteckning">'+esc(x.internal_notes||'')+'</textarea></td><td><button onclick="updatePrivacyRequest(\''+x.id+'\')">Spara</button></td></tr>').join('')+
+ '</tbody></table>';
+}
+async function updatePrivacyRequest(id){
+ const status=$('privacy-status-'+id).value,notes=$('privacy-notes-'+id).value.trim();
+ const {data:{user}}=await db.auth.getUser();
+ const changes={status,internal_notes:notes||null,handled_by:user?.id||null,completed_at:status==='completed'?new Date().toISOString():null};
+ const {error}=await db.from('privacy_requests').update(changes).eq('id',id);
+ if(error){msg('Kunde inte uppdatera dataskyddsärendet: '+error.message);return}
+ msg('Dataskyddsärendet uppdaterat.');await loadPrivacy();
 }
 async function loadAudit(){
  const {data,error}=await db.from('audit_events').select('occurred_at,actor_id,table_name,row_key,operation').order('occurred_at',{ascending:false}).limit(100);
