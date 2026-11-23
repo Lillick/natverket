@@ -980,7 +980,12 @@ document.addEventListener('click',function(event){
  const visual=event.target.closest('a.visual-card');
  if(visual){event.preventDefault();openRequestJourney(categoryForCard(visual),visual.querySelector('h3')?.textContent?.trim()||'');return;}
  const businessCard=event.target.closest('#foretag article.category-card');
- if(businessCard){openRequestJourney(categoryForCard(businessCard),businessCard.querySelector('h3')?.textContent?.trim()||'');return;}
+ if(businessCard){
+  const type=document.querySelector('#request-form select[name="customer_type"]');
+  if(type)type.value='business';
+  openRequestJourney(categoryForCard(businessCard),businessCard.querySelector('h3')?.textContent?.trim()||'');
+  return;
+ }
  const provider=event.target.closest('a[href="#uppdrag"]');
  if(provider){event.preventDefault();openProviderJourney();return;}
  const customer=event.target.closest('a[href="#behov"]');
