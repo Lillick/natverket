@@ -341,30 +341,16 @@ body{background:#f4f7fb}
  </div>
 </section>
 <section class="business-provider-panel" id="company-provider">
- <span class="public-kicker">BLI LEVERANTÖR</span><h2>Registrera ert företag</h2>
- <p>Vi förbereder företagsregistreringen så att företag kan anmäla intresse för att erbjuda tjänster och ta emot relevanta uppdrag.</p>
- <div class="provider-fields-preview">
-  <div><strong>Företagsuppgifter</strong><span>Företagsnamn, organisationsnummer och webbplats</span></div>
-  <div><stron<section class="business-provider-panel" id="company-provider">
- <span class="public-kicker">FÖRETAG SOM VILL VARA MED FRÅN START</span><h2>Registrera ert företagsintresse</h2>
- <p>Är ni intresserade av att köpa tjänster, erbjuda tjänster eller båda delarna? Berätta kort om företaget och vad ni söker eller erbjuder. Alla intresseanmälningar granskas innan eventuell anslutning.</p>
+ <span class="public-kicker">FÖRETAG SOM VILL VARA MED FRÅN START</span><h2>Anmäl ert företagsintresse</h2>
+ <p>Vill ni köpa tjänster, erbjuda tjänster eller båda delarna? Lämna företagets namn och en generell företagsadress så kan vi återkomma när NÄTVERKET öppnar.</p>
  <form class="intake-form company-interest-form" id="company-form" onsubmit="submitPublicForm(event,'company')">
-  <label>Företagsnamn</label><input name="company_name" maxlength="180" required>
-  <label>Organisationsnummer</label><input name="organization_number" maxlength="24" required>
-  <label>Vad är ni intresserade av?</label><select name="interest_type" required><option value="">Välj ett alternativ</option><option value="buy">Vi vill köpa tjänster</option><option value="sell">Vi vill erbjuda och sälja tjänster</option><option value="both">Vi vill både köpa och erbjuda tjänster</option></select>
-  <label>Bransch</label><input name="industry" maxlength="120" placeholder="Exempel: hotell, event, bygg, IT, handel" required>
-  <label>Webbplats (frivilligt)</label><input name="website" type="url" maxlength="300" placeholder="https://">
-  <label>Kontaktperson</label><input name="contact_name" maxlength="160" autocomplete="name" required>
-  <label>Företagets e-postadress</label><input name="email" type="email" maxlength="254" autocomplete="email" required>
-  <label>Telefon (frivilligt)</label><input name="phone" type="tel" maxlength="40" autocomplete="tel">
-  <label>Ort</label><input name="city" maxlength="100" value="Jönköping" required>
-  <label>Beskriv vad ni söker eller erbjuder</label><textarea name="services" maxlength="2000" placeholder="Beskriv gärna vilka tjänster ni vill köpa, vilka tjänster ni erbjuder eller båda delarna." required></textarea>
-  <div class="hp-field" aria-hidden="true"><label>Lämna detta fält tomt</label><input name="website_check" tabindex="-1" autocomplete="off"></div>
-  <label class="company-privacy-check"><input type="checkbox" name="privacy_acknowledged" value="true" required> Jag har läst informationen om hur kontaktuppgifterna behandlas.</label>
-  <p class="form-status" id="company-status" role="status">Företagsregistreringen förbereds. Inga uppgifter skickas eller sparas ännu.</p>
-  <button type="submit" disabled>Företagsregistreringen öppnar snart</button>
+  <label>Företagsnamn</label><input name="company_name" maxlength="180" autocomplete="organization" required>
+  <label>Företagets e-postadress</label><input name="email" type="email" maxlength="254" placeholder="info@foretag.se" autocomplete="email" required>
+  <label>Vad är ni intresserade av?</label><select name="interest_type" required><option value="">Välj ett alternativ</option><option value="buy">Vi vill köpa tjänster</option><option value="sell">Vi vill erbjuda tjänster</option><option value="both">Vi vill både köpa och erbjuda tjänster</option></select>
+  <p class="form-status" id="company-status" role="status">Intresseanmälan öppnar när integritetsinformationen är färdigställd. Inga uppgifter skickas ännu.</p>
+  <button type="submit" disabled>Intresseanmälan öppnar snart</button>
  </form>
- <p class="provider-closed"><strong>Så fungerar det:</strong> Ni anmäler intresse, NÄTVERKET granskar uppgifterna och kontaktar er innan någon profil publiceras eller något uppdrag förmedlas.</p>
+ <p class="provider-closed"><strong>Inga bindande avtal eller köp görs genom intresseanmälan.</strong> Vi kontaktar intresserade företag när nästa steg är klart.</p>
 </section>help-actions">
    <a href="#behov" onclick="openRequestJourney('IT & teknisk hjälp','Hjälp med mobil eller dator');return false;">Jag behöver IT-hjälp hemma</a>
    <a href="#behov" class="easy-help-secondary" onclick="openRequestJourney('Hemservice & hantverk','Hjälp i hemmet');return false;">Jag behöver annan hjälp hemma</a>
@@ -539,9 +525,9 @@ const PUBLIC_INTAKE_ENDPOINT = "";
 async function submitPublicForm(event,kind){
   event.preventDefault();
   const form=event.currentTarget;
-  const status=$(kind==='company'?'company-status':kind==='request'?'request-status':'person-status');
+  const status=$(kind==='company'?'company-status':'request-status');
   if(kind!=='company'||!PUBLIC_INTAKE_ENDPOINT){
-    status.textContent='Företagsregistreringen öppnar när integritetsinformationen är färdigställd. Inga uppgifter har skickats.';
+    status.textContent='Intresseanmälan öppnar så snart integritetsinformationen är färdigställd. Inga uppgifter har skickats.';
     return;
   }
   const button=form.querySelector('button[type="submit"]');
@@ -549,14 +535,13 @@ async function submitPublicForm(event,kind){
   status.textContent='Skickar…';
   const payload=Object.fromEntries(new FormData(form).entries());
   payload.kind='company';
-  payload.privacy_notice_version='company-interest-2026-11-23-v1';
-  payload.privacy_acknowledged=payload.privacy_acknowledged==='true';
+  payload.privacy_notice_version='company-interest-minimal-2026-11-23-v1';
   try{
     const response=await fetch(PUBLIC_INTAKE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const result=await response.json();
     if(!response.ok)throw new Error(result.error||'Det gick inte att skicka.');
     form.reset();
-    status.textContent='Tack! Ert företagsintresse har registrerats. Vi återkommer när vi har granskat uppgifterna.';
+    status.textContent='Tack! Ert företagsintresse har registrerats.';
   }catch(error){
     status.textContent=error.message||'Det gick inte att skicka. Försök igen senare.';
   }finally{button.disabled=false;}
