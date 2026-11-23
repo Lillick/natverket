@@ -23,4 +23,10 @@ Kundförfrågan ska skapa en kundpost och ett uppdrag. Intresseanmälan ska skap
 - Edge Function kräver PUBLIC_INTAKE_LEGAL_BASIS och PUBLIC_PRIVACY_NOTICE_VERSION när intaget senare ska öppnas. Dessa värden är inte konfigurerade.
 
 Publika intag ska hållas avstängda tills samtliga krav ovan är verifierade. Den nuvarande webbplatsen är en informations-/adminprototyp och ska inte beskrivas som GDPR-färdig eller produktionsklar.
-\n\n## Testresultat\n- [x] De tre databasfunktionerna testades med syntetiska testuppgifter i en transaktion som rullades tillbaka. Testet skapade förväntade poster och tre interna adminnotiser; inga testposter behölls.\n- [x] Behörighetskontroll visar EXECUTE=false för anon och authenticated och EXECUTE=true för service_role på samtliga tre intagsfunktioner.\n- [x] Edge Function v9 verifierades aktiv med INTAKE_ENABLED=false.\n- [ ] End-to-end-test via webbläsare och verkliga testkonton återstår innan öppning.\n
+
+
+## Testresultat
+- [x] De tre databasfunktionerna testades med syntetiska testuppgifter i en transaktion som rullades tillbaka. Testet skapade förväntade poster och tre interna adminnotiser; inga testposter behölls.
+- [x] Behörighetskontroll visar EXECUTE=false för anon och authenticated och EXECUTE=true för service_role på samtliga tre intagsfunktioner.
+- [x] Edge Function v9 verifierades aktiv med INTAKE_ENABLED=false.
+- [ ] End-to-end-test via webbläsare och verkliga testkonton återstår innan öppning.
