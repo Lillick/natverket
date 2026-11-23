@@ -138,4 +138,16 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [ ] CSP kräver först att inline-script, inline-stilar och inline-händelsehanterare kartläggs eller flyttas ut; lägg inte in en policy som bryter fungerande flöden eller ger falsk säkerhet.
 - [ ] Slutför personuppgiftsansvarig, kontaktuppgifter, integritetsinformation, rättsliga grunder, gallringstider, leverantörs-/biträdesavtal och villkor.
 - [ ] Testa backup/återställning, aviseringar, incidentflöde samt mobil- och desktopbeteende.
-- [ ] PR #1 är fortfarande draft och omärkt som mergead. Ingen av dessa ändringar är publicerad på main.\n\n### Backend för publika intag – byggt men avstängt\n- [x] Supabase-migrationen secure_public_intake_all_flows har lagts på projektet.\n- [x] Tre server-side databasfunktioner finns: submit_company_application, submit_public_request och submit_person_application.\n- [x] EXECUTE för de tre funktionerna är endast tilldelad service_role; anon och authenticated saknar behörighet.\n- [x] Test med syntetiska uppgifter kördes i transaktion och rullades tillbaka. Tre adminnotiser verifierades i testtransaktionen.\n- [x] Kategori Skärm & display – uthyrning och köp har lagts till i categories och verifierats aktiv.\n- [x] Edge Function public-intake v9 är driftsatt med tre intagstyper, validering, honeypot, IP-hashad rate limiting och adminnotiser. Hård spärr INTAKE_ENABLED=false är kvar.\n- [x] Frontendens submitPublicForm är förberedd för company, request och person; company-preview har namngivna fält och statusmeddelande.\n- [ ] PUBLIC_INTAKE_ENDPOINT är fortfarande tom och de publika formulären är avstängda. Ändra inte detta förrän legal basis, integritetsinformation och fullständiga tester är godkända.\n- [ ] E-postaviseringar är inte konfigurerade; nuvarande adminnotiser sparas i databasen.\n- [ ] Bekräfta att den juridiska grunden som ska användas i PUBLIC_INTAKE_LEGAL_BASIS är korrekt innan den konfigureras.\n
+- [ ] PR #1 är fortfarande draft och omärkt som mergead. Ingen av dessa ändringar är publicerad på main.
+
+### Backend för publika intag – byggt men avstängt
+- [x] Supabase-migrationen secure_public_intake_all_flows har lagts på projektet.
+- [x] Tre server-side databasfunktioner finns: submit_company_application, submit_public_request och submit_person_application.
+- [x] EXECUTE för de tre funktionerna är endast tilldelad service_role; anon och authenticated saknar behörighet.
+- [x] Test med syntetiska uppgifter kördes i transaktion och rullades tillbaka. Tre adminnotiser verifierades i testtransaktionen.
+- [x] Kategori Skärm & display – uthyrning och köp har lagts till i categories och verifierats aktiv.
+- [x] Edge Function public-intake v9 är driftsatt med tre intagstyper, validering, honeypot, IP-hashad rate limiting och adminnotiser. Hård spärr INTAKE_ENABLED=false är kvar.
+- [x] Frontendens submitPublicForm är förberedd för company, request och person; company-preview har namngivna fält och statusmeddelande.
+- [ ] PUBLIC_INTAKE_ENDPOINT är fortfarande tom och de publika formulären är avstängda. Ändra inte detta förrän legal basis, integritetsinformation och fullständiga tester är godkända.
+- [ ] E-postaviseringar är inte konfigurerade; nuvarande adminnotiser sparas i databasen.
+- [ ] Bekräfta att den juridiska grunden som ska användas i PUBLIC_INTAKE_LEGAL_BASIS är korrekt innan den konfigureras.
