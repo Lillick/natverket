@@ -84,7 +84,7 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [x] `submit_company_application(jsonb)` kan endast köras av service_role.
 - [x] `company_applications` och `public_intake_rate_limits` saknar policyer och direkta klientbehörigheter; de är avsiktligt stängda för klientroller.
 - [x] Samtliga 8 SECURITY DEFINER-funktioner som Supabase varnar för har kontrollerats. De administrativa funktionerna kontrollerar `public.is_admin()`; `is_admin()` lämnar endast ett booleskt svar. Varningarna ska ändå följas upp genom negativa tester och minsta möjliga EXECUTE-behörighet.
-- [x] Aktiv Supabase Edge Function `public-intake` är version 8. Den har `INTAKE_ENABLED = false`, så den avvisar anrop innan den läser eller sparar formulärdata.
+- [x] Aktiv Supabase Edge Function `public-intake` är version 9. Den har `INTAKE_ENABLED = false`, så den avvisar anrop innan den läser eller sparar formulärdata.
 - [x] Publik HTML saknar service-role-nyckel; förekomsten av texten `service_role` är en instruktion att aldrig använda nyckeln i webbläsaren.
 - [x] Statisk kontroll av index.html: inga dubbla id:n och inga brutna interna ankarlänkar. Två publika intagsformulär har avstängda skicka-knappar; det tredje är en inaktiv förhandsvisning av företagsregistrering med samtliga fält avstängda.
 
@@ -117,15 +117,15 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [x] Kategoriklick leder till kundförfrågningsflödet och förväljer rätt kategori; företagskategorier förväljer företag som kundtyp.
 - [x] Individuell leverantörs-/uppdragslänk öppnar rätt personflöde i stället för företagsregistreringen.
 - [x] Tidigare oåtkomlig kod efter tidiga return-satser är rättad i de tre flödesfunktionerna.
-- [x] Företagsregistreringens inaktiva förhandsvisning är utökad med kontaktperson, företagskontakt, webbplats, frivilligt Instagram-namn, köp-/säljinriktning, tjänsteområde, geografiskt område, presentation, F-skatt, försäkring och behörigheter.
+- [x] Företagsregistreringens inaktiva förhandsvisning är utökad med kontaktperson, företagskontakt, webbplats, frivilligt Instagram-namn, köp-/säljinriktning, tjänsteområde, geografiskt område, presentation samt information om att relevanta uppgifter om F-skatt, försäkring och behörigheter kan verifieras före publicering (inga sådana uppgifter samlas in i förhandsvisningen).
 - [x] Förhandsvisningen visas, men samtliga fält och knappen är avstängda. De två publika intagsformulären är fortfarande dolda och deras skicka-knappar är avstängda.
 - [x] Canonical URL samt Open Graph- och Twitter-metadata finns på arbetsgrenen.
 
 ### Statisk kvalitetssäkring av arbetsgrenen
-- [x] 133 HTML-id:n kontrollerade: inga dubbletter.
+- [x] 135 HTML-id:n kontrollerade: inga dubbletter.
 - [x] Interna ankarlänkar kontrollerade: inga saknade mål.
 - [x] 41 visuella tjänstekort och 4 företagskort kontrollerade mot tillåtna kategorier i förfrågningsformuläret: samtliga mappas till giltig kategori.
-- [x] 11 nuvarande spårade filer genomsökta efter vanliga mönster för privata nycklar, GitHub-token, Stripe-hemligheter, Supabase secret keys, AWS-nycklar och Slack-token: inga träffar. Detta är inte en fullständig historikgranskning.
+- [x] 12 nuvarande spårade filer genomsökta efter vanliga mönster för privata nycklar, GitHub-token, Stripe-hemligheter, Supabase secret keys, AWS-nycklar och Slack-token: inga träffar. Detta är inte en fullständig historikgranskning.
 - [x] Supabase-funktionernas definitioner granskade: samtliga åtta varnade SECURITY DEFINER-funktioner har tom search_path; administrativa skrivfunktioner kontrollerar public.is_admin(), och katalog-/sökfunktionerna lämnar endast data när admin-kontrollen passerar.
 - [x] Simulerat icke-admin-anrop med databasrollen authenticated: samtliga skyddade skrivfunktioner avvisade anropet och adminbegränsade läsningar returnerade inga rader. Test med riktiga användarsessioner återstår.
 - [x] Vercels statuskontroll rapporterar success för senaste kontrollerade arbetsgrenscommit 0e19819d950a1e0aff4309d5180e2cf62f91958f.
@@ -160,3 +160,7 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [x] Adminprofilens id gav is_admin=true i separat simulerad session.
 - [x] Efter rollback finns 0 syntetiska testposter kvar i företag, kunder, personer, dataskyddsregister och adminnotiser.
 - [x] Databasfunktionerna för kund/person kräver explicit legal basis och avvisar NULL.
+
+### Senaste verifiering
+- [x] 12 spårade filer i nuvarande arbetsgren har genomsökts efter vanliga mönster för privata nycklar och API-token; inga träffar. Git-historiken är ännu inte fullständigt granskad.
+- [x] Vercel Preview är Ready på den senaste kontrollerade PR-committen. Den visuella kontrollen och kontroll av faktiska svarsrubriker återstår eftersom webbläsarinspektionen inte har kunnat genomföras här.
