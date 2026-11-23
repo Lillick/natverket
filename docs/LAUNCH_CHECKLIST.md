@@ -72,3 +72,39 @@ Detta är en grundläggande teknisk kontroll, inte en fullständig penetrationst
 ## Viktigt
 
 Databastabeller för dataskydd är stöd för en process, inte en färdig GDPR-process i sig. Detta dokument är en teknisk och operativ plan, inte juridisk rådgivning eller ett intyg om GDPR-efterlevnad. Använd inte riktiga personuppgifter eller öppna publik registrering förrän relevanta säkerhets-, drift- och dataskyddskrav är testade.
+
+
+## Ny teknisk återkontroll – 2026-11-23
+
+Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Detta är en statusbild, inte ett godkännande för lansering.
+
+### Verifierat
+- [x] 23 publika tabeller har RLS aktiverat.
+- [x] Rollen anon har 0 direkta tabellbehörigheter i public och 0 EXECUTE på funktioner i public.
+- [x] `submit_company_application(jsonb)` kan endast köras av service_role.
+- [x] `company_applications` och `public_intake_rate_limits` saknar policyer och direkta klientbehörigheter; de är avsiktligt stängda för klientroller.
+- [x] Samtliga 8 SECURITY DEFINER-funktioner som Supabase varnar för har kontrollerats. De administrativa funktionerna kontrollerar `public.is_admin()`; `is_admin()` lämnar endast ett booleskt svar. Varningarna ska ändå följas upp genom negativa tester och minsta möjliga EXECUTE-behörighet.
+- [x] Aktiv Supabase Edge Function `public-intake` är version 8. Den har `INTAKE_ENABLED = false`, så den avvisar anrop innan den läser eller sparar formulärdata.
+- [x] Publik HTML saknar service-role-nyckel; förekomsten av texten `service_role` är en instruktion att aldrig använda nyckeln i webbläsaren.
+- [x] Statisk kontroll av `index.html`: inga dubbla id:n och inga brutna interna ankarlänkar. Tre formulär finns; alla tre skicka-knappar är avstängda.
+
+### Kvarstående tekniska punkter
+- [ ] Supabase Auth: leaked-password protection är avstängd och ska aktiveras.
+- [ ] Testa åtkomst med anonym besökare, vanlig inloggad användare och administratör i verkliga sessionsflöden.
+- [ ] Genomför fullständig hemlighetsgranskning av hela det publika GitHub-repot och historiken, inte bara startsidan.
+- [ ] Lägg till och verifiera CSP efter att tillåtna externa bild-, script- och API-källor har kartlagts. Startsidan laddar Supabase JS från jsDelivr och bilder från externa bildkällor.
+- [ ] Lägg till canonical URL och Open Graph-metadata samt kontrollera favicon, sitemap och robots.txt.
+- [ ] Vercel: verifiera produktionsdeployment, preview, rollback, miljövariabler, headers och domän. Vercel-integration behöver anslutas för direkt kontroll via ChatGPT.
+- [ ] Kontrollera backup och återställning, loggning, e-postaviseringar och incidentflöde.
+- [ ] Genomför mobil-/desktop-acceptanstest och tillgänglighetskontroll.
+- [ ] Juridisk identitet, personuppgiftsansvarig, kontaktuppgifter, rättsliga grunder, lagringstider, biträden/överföringar och slutliga villkor måste fastställas före personuppgiftsinsamling.
+
+### Ändringar i arbetsgrenen `launch-readiness`
+- [x] Supabase Edge Function-källan i GitHub har synkroniserats mot den aktiva version 8, så att kodbasen inte längre ligger efter den driftsatta funktionen.
+- [x] `vercel.json` har lagts till med grundläggande säkerhetsheaders: nosniff, frame-deny, strikt referrer policy, begränsad Permissions-Policy och HSTS.
+- [ ] Ändringarna är ännu inte mergade till `main` eller verifierade i Vercel Production.
+
+### Viktiga skillnader att förstå
+- 141 direkta tabellbehörigheter för rollen authenticated finns i databasen, men RLS-policyerna begränsar åtkomsten. Dessa ska inte bedömas enbart utifrån antalet grants; de måste testas med vanliga användarkonton.
+- De två tabellerna utan RLS-policy är avsiktligt stängda för klientroller. Skapa inte en publik policy bara för att få bort en INFO-varning.
+- Att en Edge Function har `verify_jwt = false` innebär att den är nåbar utan Supabase-inloggning. Den måste därför ha egen skyddskontroll. Just nu är intake-funktionen dessutom hårt avstängd; aktivera den inte innan hela lanseringsspärrlistan är godkänd.
