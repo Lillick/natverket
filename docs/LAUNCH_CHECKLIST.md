@@ -94,7 +94,7 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [ ] Genomför fullständig hemlighetsgranskning av hela det publika GitHub-repot och historiken, inte bara startsidan.
 - [ ] Lägg till och verifiera CSP efter att tillåtna externa bild-, script- och API-källor har kartlagts. Startsidan laddar Supabase JS från jsDelivr och bilder från externa bildkällor.
 - [ ] Lägg till canonical URL och Open Graph-metadata samt kontrollera favicon, sitemap och robots.txt.
-- [ ] Vercel: verifiera produktionsdeployment, preview, rollback, miljövariabler, headers och domän. Vercel-integration behöver anslutas för direkt kontroll via ChatGPT.
+- [ ] Vercel: verifiera produktionsdeployment, preview, rollback, miljövariabler, headers och domän via den redan anslutna Vercel-integrationen.
 - [ ] Kontrollera backup och återställning, loggning, e-postaviseringar och incidentflöde.
 - [ ] Genomför mobil-/desktop-acceptanstest och tillgänglighetskontroll.
 - [ ] Juridisk identitet, personuppgiftsansvarig, kontaktuppgifter, rättsliga grunder, lagringstider, biträden/överföringar och slutliga villkor måste fastställas före personuppgiftsinsamling.
