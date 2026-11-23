@@ -151,3 +151,12 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [ ] PUBLIC_INTAKE_ENDPOINT är fortfarande tom och de publika formulären är avstängda. Ändra inte detta förrän legal basis, integritetsinformation och fullständiga tester är godkända.
 - [ ] E-postaviseringar är inte konfigurerade; nuvarande adminnotiser sparas i databasen.
 - [ ] Bekräfta att den juridiska grunden som ska användas i PUBLIC_INTAKE_LEGAL_BASIS är korrekt innan den konfigureras.
+
+### Fördjupat åtkomsttest
+- [x] Simulerad authenticated-session med icke-admin JWT-sub: is_admin=false.
+- [x] Samtliga åtta befintliga adminfunktioner avvisade icke-admin-sessionen eller returnerade inga rader.
+- [x] Icke-admin-session såg 0 rader i nio kontrollerade tabeller: profiles, customers, requests, people, service_profiles, privacy_records, privacy_requests, audit_events och admin_notifications.
+- [x] company_applications nekades redan på tabellbehörighet för authenticated.
+- [x] Adminprofilens id gav is_admin=true i separat simulerad session.
+- [x] Efter rollback finns 0 syntetiska testposter kvar i företag, kunder, personer, dataskyddsregister och adminnotiser.
+- [x] Databasfunktionerna för kund/person kräver explicit legal basis och avvisar NULL.
