@@ -346,6 +346,8 @@ body{background:#f4f7fb}
  <form class="intake-form company-interest-form" id="company-form" onsubmit="submitPublicForm(event,'company')">
   <label>Företagsnamn</label><input name="company_name" maxlength="180" autocomplete="organization" required>
   <label>Företagets e-postadress</label><input name="email" type="email" maxlength="254" placeholder="info@foretag.se" autocomplete="email" required>
+  <label>Instagram-konto (frivilligt)</label><input name="instagram" type="text" maxlength="80" placeholder="@foretagsnamn" autocomplete="off" aria-describedby="instagram-help">
+  <small id="instagram-help" class="legal-note">Ange gärna ert företags Instagram så att vi kan hitta och följa varandra.</small>
   <label>Vad är ni intresserade av?</label><select name="interest_type" required><option value="">Välj ett alternativ</option><option value="buy">Vi vill köpa tjänster</option><option value="sell">Vi vill erbjuda tjänster</option><option value="both">Vi vill både köpa och erbjuda tjänster</option></select>
   <p class="form-status" id="company-status" role="status">Intresseanmälan öppnar när integritetsinformationen är färdigställd. Inga uppgifter skickas ännu.</p>
   <button type="submit" disabled>Intresseanmälan öppnar snart</button>
