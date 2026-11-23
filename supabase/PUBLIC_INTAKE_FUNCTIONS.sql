@@ -101,6 +101,7 @@ begin
      or (v_availability is not null and v_availability not in ('Omgående','Inom två veckor','Inom en månad','Flexibelt / enligt överenskommelse','Helger och kvällar','Vardagar'))
      or (v_experience is not null and length(v_experience) > 2500)
      or p_notice_version is null or btrim(p_notice_version) = ''
+     or p_legal_basis is null
      or p_legal_basis not in ('consent','contract','legal_obligation','legitimate_interests','vital_interests','public_task') then
     raise exception 'Ogiltiga intresseuppgifter';
   end if;
@@ -177,6 +178,7 @@ begin
      or (v_phone is not null and length(v_phone) > 40)
      or (v_city is not null and (length(v_city) < 2 or length(v_city) > 100))
      or p_notice_version is null or btrim(p_notice_version) = ''
+     or p_legal_basis is null
      or p_legal_basis not in ('consent','contract','legal_obligation','legitimate_interests','vital_interests','public_task') then
     raise exception 'Ogiltiga förfrågningsuppgifter';
   end if;
