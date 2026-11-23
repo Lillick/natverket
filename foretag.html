@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NÄTVERKET PRO – Företagsyta</title>
+<meta name="description" content="NÄTVERKET PRO – kundregister, affärsmöjligheter och uppföljningar för småföretag.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#10243b;--navy2:#183653;--teal:#12a89a;--ink:#172b43;--muted:#63758a;--line:#dce5ee;--bg:#f3f7fa;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(115deg,var(--navy),var(--navy2));color:white;padding:17px max(20px,calc((100vw - 1160px)/2));border-bottom:4px solid var(--teal);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-weight:850;letter-spacing:2px;font-size:21px}.brand small{display:block;font-size:12px;letter-spacing:.2px;font-weight:500;color:#c9d9e5}
+a{color:var(--teal-dark,#087f78)}button{border:0;border-radius:9px;padding:11px 15px;background:var(--navy2);color:white;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#087f78}button.secondary{background:#e9f0f4;color:var(--navy)}button:disabled{opacity:.55;cursor:wait}
+main{max-width:1160px;margin:28px auto;padding:0 18px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 5px 18px rgba(16,36,59,.04);margin-bottom:16px}
+h1,h2,h3{color:var(--navy);margin-top:0}h1{font-size:30px;line-height:1.15}h2{font-size:21px;margin-bottom:14px}p{color:var(--muted)}
+label{display:block;font-size:13px;font-weight:700;color:#40566c;margin:10px 0 5px}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid #ccd8e3;border-radius:9px;background:white;color:var(--ink);font:inherit}textarea{min-height:82px;resize:vertical}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{background:#f6f9fb;border:1px solid #e3ebf0;border-radius:12px;padding:15px;color:var(--muted);font-size:13px}.stat b{display:block;font-size:28px;color:var(--navy);line-height:1.2}
+.tabs{display:flex;gap:7px;overflow:auto;padding:7px;background:#e8eff4;border-radius:12px;margin-bottom:16px}.tabs button{white-space:nowrap}.tabs button.active{background:#087f78}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hidden{display:none!important}.scroll{overflow:auto;border:1px solid #e5edf2;border-radius:10px}table{border-collapse:collapse;width:100%;min-width:620px;font-size:13px}th,td{text-align:left;padding:11px 10px;border-bottom:1px solid #e7edf2;vertical-align:top}th{background:#f5f8fa;color:#40566c}
+.note{background:#eef8f7;border:1px solid #d0ece8;border-radius:11px;padding:13px 15px;color:#315d5a;font-size:13px}.msg{font-weight:650;color:#087f78;min-height:22px}.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+@media(max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:1fr}main{margin:18px auto}.panel{padding:16px}header{padding:15px 17px}}
+</style>
+</head>
+<body>
+<header><div class="brand">NÄTVERKET <small>PRO · Företagets arbetsyta</small></div><a href="/" style="color:#d6e8ef;text-decoration:none;font-size:13px">Till webbplatsen ↗</a></header>
+<main>
+<section id="login" class="panel" style="max-width:520px;margin:8vh auto">
+<div class="note">En inloggning för godkända företagskonton. Företagskonton aktiveras efter kontakt med NÄTVERKET. Det finns ingen öppen självregistrering ännu.</div>
+<h1 style="margin-top:20px">Välkommen till NÄTVERKET PRO</h1><p>Samla kunder, affärsmöjligheter och uppföljningar på ett ställe.</p>
+<label>E-postadress</label><input id="email" type="email" autocomplete="username" placeholder="namn@foretag.se">
+<label>Lösenord</label><input id="password" type="password" autocomplete="current-password" placeholder="Ditt lösenord">
+<p><button id="loginBtn" onclick="login()">Logga in</button></p><div id="loginMsg" class="msg" role="status"></div>
+</section>
+<section id="workspace" class="hidden">
+<div class="panel">
+<div class="topline"><div><div style="font-size:12px;letter-spacing:1.6px;color:#087f78;font-weight:800">FÖRETAGETS ARBETSPLATS</div><h1 id="orgName" style="margin:5px 0">NÄTVERKET PRO</h1><p style="margin:0">Håll koll på relationer, nya affärer och det som behöver följas upp.</p></div><button class="secondary" onclick="logout()">Logga ut</button></div>
+</div>
+<div class="grid" style="margin-bottom:16px">
+<div class="stat"><b id="statContacts">0</b>Kontakter</div><div class="stat"><b id="statLeads">0</b>Affärsmöjligheter</div><div class="stat"><b id="statTasks">0</b>Öppna uppgifter</div><div class="stat"><b id="statValue">0 kr</b>Potentiellt affärsvärde</div>
+</div>
+<div class="tabs">
+<button class="active" data-tab="overview" onclick="showTab('overview',this)">Översikt</button>
+<button data-tab="contacts" onclick="showTab('contacts',this)">Kontakter</button>
+<button data-tab="leads" onclick="showTab('leads',this)">Affärer</button>
+<button data-tab="tasks" onclick="showTab('tasks',this)">Uppgifter</button>
+<button data-tab="activities" onclick="showTab('activities',this)">Aktiviteter</button>
+</div>
+<section id="tab-overview" class="panel">
+<h2>Din arbetsöversikt</h2><div class="row"><div><h3>Senaste affärsmöjligheter</h3><div id="recentLeads" class="scroll"></div></div><div><h3>Nästa uppgifter</h3><div id="nextTasks" class="scroll"></div></div></div>
+<p class="note" style="margin-top:16px">NÄTVERKET PRO är under uppbyggnad. Funktionerna är kostnadsfria i den första testversionen. Abonnemang och betalningar aktiveras inte nu.</p>
+</section>
+<section id="tab-contacts" class="panel hidden">
+<div class="topline"><h2>Kontakter</h2><button onclick="toggleForm('contactForm')">+ Ny kontakt</button></div>
+<form id="contactForm" class="hidden" onsubmit="saveContact(event)"><div class="row"><div><label>Namn *</label><input name="full_name" required maxlength="180"></div><div><label>Företag</label><input name="company_name" maxlength="180"></div></div><div class="row"><div><label>E-post</label><input name="email" type="email" maxlength="254"></div><div><label>Telefon</label><input name="phone" maxlength="40"></div></div><div class="row"><div><label>Ort</label><input name="city" maxlength="100"></div><div><label>Typ</label><select name="contact_type"><option value="customer">Kund</option><option value="prospect">Potentiell kund</option><option value="partner">Samarbetspartner</option><option value="supplier">Leverantör</option><option value="other">Övrig</option></select></div></div><label>Anteckningar</label><textarea name="notes" maxlength="3000"></textarea><button type="submit">Spara kontakt</button><span id="contactMsg" class="msg"></span></form>
+<div id="contactsTable" class="scroll"></div>
+</section>
+<section id="tab-leads" class="panel hidden">
+<div class="topline"><h2>Affärsmöjligheter</h2><button onclick="toggleForm('leadForm')">+ Ny affär</button></div>
+<form id="leadForm" class="hidden" onsubmit="saveLead(event)"><label>Rubrik *</label><input name="title" required maxlength="180"><label>Beskrivning</label><textarea name="description" maxlength="3000"></textarea><div class="row"><div><label>Uppskattat värde (kr)</label><input name="estimated_value" type="number" min="0" step="0.01"></div><div><label>Förväntat avslut</label><input name="expected_close_date" type="date"></div></div><div class="row"><div><label>Källa</label><input name="source" placeholder="Ex. NÄTVERKET, rekommendation"></div><div><label>Steg</label><select name="pipeline_stage"><option value="new">Ny</option><option value="contacted">Kontaktad</option><option value="meeting">Möte bokat</option><option value="proposal">Offert skickad</option><option value="won">Vunnen</option><option value="lost">Förlorad</option></select></div></div><button type="submit">Spara affär</button><span id="leadMsg" class="msg"></span></form>
+<div id="leadsTable" class="scroll"></div>
+</section>
+<section id="tab-tasks" class="panel hidden">
+<div class="topline"><h2>Uppgifter och uppföljning</h2><button onclick="toggleForm('taskForm')">+ Ny uppgift</button></div>
+<form id="taskForm" class="hidden" onsubmit="saveTask(event)"><label>Vad behöver göras? *</label><input name="title" required maxlength="180"><label>Beskrivning</label><textarea name="description" maxlength="2000"></textarea><label>Deadline</label><input name="due_at" type="datetime-local"><button type="submit">Spara uppgift</button><span id="taskMsg" class="msg"></span></form>
+<div id="tasksTable" class="scroll"></div>
+</section>
+<section id="tab-activities" class="panel hidden">
+<h2>Aktivitetslogg</h2><form onsubmit="saveActivity(event)"><label>Rubrik *</label><input name="subject" required maxlength="180" placeholder="Ex. Ringde kunden"><div class="row"><div><label>Typ</label><select name="activity_type"><option value="note">Anteckning</option><option value="call">Telefonsamtal</option><option value="email">E-post</option><option value="meeting">Möte</option></select></div><div><label>Detaljer</label><input name="details" maxlength="2000" placeholder="Kort sammanfattning"></div></div><button type="submit">Lägg till aktivitet</button><span id="activityMsg" class="msg"></span></form><div id="activitiesTable" class="scroll" style="margin-top:16px"></div>
+</section>
+<div id="globalMsg" class="msg" role="status"></div>
+</section>
+</main>
+<script>
+const SUPABASE_URL="https://xocavmntkdwwukcrrzml.supabase.co";
+const SUPABASE_KEY="sb_publishable_2iLhLhJ2I2gwHmLOYQg_LQ_VRsICg3D";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let user=null,org=null;
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=value=>new Intl.NumberFormat("sv-SE",{style:"currency",currency:"SEK",maximumFractionDigits:0}).format(Number(value)||0);
+function setMsg(id,text){$(id).textContent=text||""}
+async function login(){
+ const btn=$("loginBtn");btn.disabled=true;setMsg("loginMsg","Loggar in…");
+ const {data,error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+ btn.disabled=false;
+ if(error){setMsg("loginMsg","Kunde inte logga in. Kontrollera e-post och lösenord.");return}
+ user=data.user;await loadMembership();
+}
+async function loadMembership(){
+ const {data,error}=await db.from("organization_memberships").select("organization_id,member_role,tenant_organizations(display_name,subscription_plan,subscription_status)").eq("user_id",user.id).eq("status","active");
+ if(error){setMsg("loginMsg","Kunde inte läsa företagsbehörigheten. Kontakta NÄTVERKET.");return}
+ if(!data?.length){await db.auth.signOut();setMsg("loginMsg","Kontot har ännu inget aktivt företagsutrymme. Kontakta NÄTVERKET.");return}
+ if(data.length>1){setMsg("loginMsg","Kontot har fler än ett företagsutrymme. Kontakta supporten så väljer vi rätt arbetsyta.");await db.auth.signOut();return}
+ org=data[0].organization_id;$("orgName").textContent=data[0].tenant_organizations?.display_name||"Företagets arbetsyta";
+ $("login").classList.add("hidden");$("workspace").classList.remove("hidden");await refreshAll();
+}
+async function logout(){await db.auth.signOut();user=null;org=null;location.reload()}
+function showTab(name,button){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.classList.add("hidden"));$("tab-"+name).classList.remove("hidden");document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));button.classList.add("active")}
+function toggleForm(id){$(id).classList.toggle("hidden")}
+function table(headers,rows){if(!rows.length)return '<p style="padding:14px;color:#63758a">Inget att visa ännu. Lägg till din första post.</p>';return '<table><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join("")+'</tr></thead><tbody>'+rows.join("")+'</tbody></table>'}
+async function refreshAll(){await Promise.all([loadStats(),loadContacts(),loadLeads(),loadTasks(),loadActivities()])}
+async function loadStats(){
+ const [c,l,t,v]=await Promise.all([
+ db.from("crm_contacts").select("id",{count:"exact",head:true}).eq("organization_id",org),
+ db.from("crm_leads").select("id,estimated_value,pipeline_stage").eq("organization_id",org),
+ db.from("crm_tasks").select("id",{count:"exact",head:true}).eq("organization_id",org).in("task_status",["open","in_progress"])
+ ]);
+ if(c.error||l.error||t.error){setMsg("globalMsg","Kunde inte läsa sammanställningen. Kontrollera företagsbehörigheten.");return}
+ $("statContacts").textContent=c.count||0;$("statLeads").textContent=l.data?.filter(x=>!["won","lost"].includes(x.pipeline_stage)).length||0;$("statTasks").textContent=t.count||0;
+ $("statValue").textContent=money((l.data||[]).filter(x=>!["won","lost"].includes(x.pipeline_stage)).reduce((s,x)=>s+Number(x.estimated_value||0),0));
+}
+async function loadContacts(){
+ const {data,error}=await db.from("crm_contacts").select("id,full_name,company_name,email,phone,city,contact_type,created_at").eq("organization_id",org).order("created_at",{ascending:false}).limit(200);
+ if(error){$("contactsTable").textContent="Kunde inte läsa kontakter.";return}
+ $("contactsTable").innerHTML=table(["Namn","Företag","Kontakt","Ort","Typ"],(data||[]).map(x=>'<tr><td><b>'+esc(x.full_name)+'</b></td><td>'+esc(x.company_name)+'</td><td>'+esc(x.email)+'<br>'+esc(x.phone)+'</td><td>'+esc(x.city)+'</td><td>'+esc(({customer:"Kund",prospect:"Prospekt",partner:"Partner",supplier:"Leverantör",other:"Övrig"})[x.contact_type])+'</td></tr>'));
+}
+async function saveContact(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f));const {error}=await db.from("crm_contacts").insert({...d,organization_id:org});setMsg("contactMsg",error?"Kunde inte spara kontakten.":"Kontakten sparades.");if(!error){f.reset();f.classList.add("hidden");await loadContacts();await loadStats()}}
+async function loadLeads(){
+ const {data,error}=await db.from("crm_leads").select("id,title,description,pipeline_stage,estimated_value,expected_close_date,created_at").eq("organization_id",org).order("created_at",{ascending:false}).limit(200);
+ if(error){$("leadsTable").textContent="Kunde inte läsa affärsmöjligheter.";return}
+ const stages={new:"Ny",contacted:"Kontaktad",meeting:"Möte",proposal:"Offert",won:"Vunnen",lost:"Förlorad"};
+ $("leadsTable").innerHTML=table(["Affär","Värde","Steg","Förväntat avslut"],(data||[]).map(x=>'<tr><td><b>'+esc(x.title)+'</b><br>'+esc(x.description)+'</td><td>'+money(x.estimated_value)+'</td><td><select aria-label="Ändra affärssteg" onchange="updateLeadStage(\''+x.id+'\',this.value)">'+Object.entries(stages).map(([k,v])=>'<option value="'+k+'" '+(x.pipeline_stage===k?'selected':'')+'>'+v+'</option>').join("")+'</select></td><td>'+esc(x.expected_close_date||"—")+'</td></tr>'));
+ $("recentLeads").innerHTML=table(["Affär","Steg","Värde"],(data||[]).slice(0,5).map(x=>'<tr><td>'+esc(x.title)+'</td><td>'+esc(stages[x.pipeline_stage])+'</td><td>'+money(x.estimated_value)+'</td></tr>'));
+}
+async function saveLead(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f));d.estimated_value=d.estimated_value?Number(d.estimated_value):null;d.expected_close_date=d.expected_close_date||null;const {error}=await db.from("crm_leads").insert({...d,organization_id:org});setMsg("leadMsg",error?"Kunde inte spara affären.":"Affären sparades.");if(!error){f.reset();f.classList.add("hidden");await loadLeads();await loadStats()}}
+async function updateLeadStage(id,stage){const {error}=await db.from("crm_leads").update({pipeline_stage:stage}).eq("id",id).eq("organization_id",org);if(error)setMsg("globalMsg","Kunde inte ändra affärens status.");else{await loadLeads();await loadStats()}}
+async function loadTasks(){
+ const {data,error}=await db.from("crm_tasks").select("id,title,description,due_at,task_status,created_at").eq("organization_id",org).order("due_at",{ascending:true,nullsFirst:false}).limit(200);
+ if(error){$("tasksTable").textContent="Kunde inte läsa uppgifter.";return}
+ const label={open:"Öppen",in_progress:"Pågår",done:"Klar",cancelled:"Avbruten"};
+ $("tasksTable").innerHTML=table(["Uppgift","Deadline","Status","Åtgärd"],(data||[]).map(x=>'<tr><td><b>'+esc(x.title)+'</b><br>'+esc(x.description)+'</td><td>'+esc(x.due_at?new Date(x.due_at).toLocaleString("sv-SE"):"—")+'</td><td>'+esc(label[x.task_status])+'</td><td>'+(x.task_status!=="done"?'<button class="secondary" onclick="completeTask(\''+x.id+'\')">Markera klar</button>':"✓")+'</td></tr>'));
+ $("nextTasks").innerHTML=table(["Uppgift","Deadline"],(data||[]).filter(x=>x.task_status!=="done"&&x.task_status!=="cancelled").slice(0,5).map(x=>'<tr><td>'+esc(x.title)+'</td><td>'+esc(x.due_at?new Date(x.due_at).toLocaleDateString("sv-SE"):"—")+'</td></tr>'));
+}
+async function saveTask(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f));d.due_at=d.due_at?new Date(d.due_at).toISOString():null;const {error}=await db.from("crm_tasks").insert({...d,organization_id:org});setMsg("taskMsg",error?"Kunde inte spara uppgiften.":"Uppgiften sparades.");if(!error){f.reset();f.classList.add("hidden");await loadTasks();await loadStats()}}
+async function completeTask(id){const {error}=await db.from("crm_tasks").update({task_status:"done"}).eq("id",id).eq("organization_id",org);if(error)setMsg("globalMsg","Kunde inte uppdatera uppgiften.");else{await loadTasks();await loadStats()}}
+async function loadActivities(){
+ const {data,error}=await db.from("crm_activities").select("id,subject,details,activity_type,created_at").eq("organization_id",org).order("created_at",{ascending:false}).limit(100);
+ if(error){$("activitiesTable").textContent="Kunde inte läsa aktivitetsloggen.";return}
+ $("activitiesTable").innerHTML=table(["Aktivitet","Typ","Datum"],(data||[]).map(x=>'<tr><td><b>'+esc(x.subject)+'</b><br>'+esc(x.details)+'</td><td>'+esc(({note:"Anteckning",call:"Samtal",email:"E-post",meeting:"Möte",status_change:"Status"})[x.activity_type])+'</td><td>'+new Date(x.created_at).toLocaleString("sv-SE")+'</td></tr>'));
+}
+async function saveActivity(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f));const {error}=await db.from("crm_activities").insert({...d,organization_id:org});setMsg("activityMsg",error?"Kunde inte spara aktiviteten.":"Aktiviteten sparades.");if(!error){f.reset();await loadActivities()}}
+db.auth.getSession().then(({data})=>{if(data.session){user=data.session.user;loadMembership()}});
+</script>
+</body></html>
