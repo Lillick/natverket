@@ -12,6 +12,7 @@ Publik intresseanmälan är avsiktligt stängd. Ingen publik registrering eller 
 - [x] 0 av 29 publika tabeller har anonym SELECT/INSERT/UPDATE/DELETE-behörighet.
 - [x] 0 publika SECURITY DEFINER-funktioner kan köras av rollen `anon`.
 - [x] Publika intags-RPC:er kan inte köras direkt av anon eller vanliga inloggade användare; Edge Function använder server-side service key.
+- [x] Sju admin-RPC:er är ändrade från SECURITY DEFINER till SECURITY INVOKER och använder tabellernas admin-only RLS. Endast is_admin() är kvar som SECURITY DEFINER för att undvika rekursiv RLS-kontroll mot profiles.
 - [x] Edge Function `public-intake` finns aktiv, men `INTAKE_ENABLED = false`.
 - [x] Webbplatsens `PUBLIC_INTAKE_ENDPOINT` är tom. Formulären skickar därför inte personuppgifter.
 - [x] Företagsansökningar är endast åtkomliga för plattformsadministratör via RLS. Ingen direkt anonym åtkomst.
@@ -20,7 +21,7 @@ Publik intresseanmälan är avsiktligt stängd. Ingen publik registrering eller 
 - [x] Databasen har metadata-baserad audit-logg med 13 triggers, inklusive CRM och företagsansökningar.
 - [x] Tenant-organisationens SELECT-policy har korrigerats så att aktiv medlemsrad jämförs mot organisationens faktiska ID.
 - [x] CRM-uppdateringar låser skaparattribution till aktuell användare.
-- [x] Supabase Security Advisor visar inga anon-exekverbara SECURITY DEFINER-funktioner och inga publika tabeller utan RLS.
+- [x] Supabase Security Advisor visar inga anon-exekverbara SECURITY DEFINER-funktioner och inga publika tabeller utan RLS. En avsiktlig SECURITY DEFINER-varning återstår för is_admin().
 
 ## Kvarvarande tekniska kontroller före pilot
 
@@ -28,7 +29,7 @@ Publik intresseanmälan är avsiktligt stängd. Ingen publik registrering eller 
 - [ ] Testa rollerna owner, admin, member och viewer med riktiga testkonton.
 - [ ] Testa administratörsinloggning, utloggning, lösenordsåterställning, e-postbekräftelse och sessionsutgång.
 - [ ] Aktivera MFA för administratörskontot där det stöds.
-- [ ] Granska de åtta avsiktligt exponerade SECURITY DEFINER-funktionerna. De nuvarande funktionerna har admin-kontroller, men detta ska testas med vanligt konto innan pilot.
+- [ ] Testa de sju SECURITY INVOKER-admin-RPC:erna med både admin och vanligt konto. is_admin() är fortsatt SECURITY DEFINER eftersom den måste läsa adminroll utan rekursiv RLS; funktionen returnerar endast sant/falskt och anon saknar EXECUTE.
 - [ ] Slutför test av formulärens server-side validering, honeypot, storleksgräns, CORS och rate-limit innan intaget öppnas. Rate-limit behöver testas även vid samtidiga anrop.
 - [ ] Kontrollera att endast publishable/anon-nyckel finns i klientkod. Service-role/secret får endast finnas som server-side secret.
 - [ ] Verifiera Vercel-deploy, domän, HTTPS, mobil och desktop i riktiga webbläsare. GitHub-commit är inte i sig bevis på lyckad Vercel-deploy.
