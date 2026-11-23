@@ -1,74 +1,71 @@
-# NÄTVERKET – lanseringsplan och verifieringsstatus
+# NÄTVERKET – lanseringschecklista och verifieringsstatus
 
-Detta repo innehåller en tidig admin-MVP och publik informationssida. Att kod finns i GitHub eller att grundläggande SQL-kontroller passerar betyder inte att tjänsten är produktionsklar.
+Senast tekniskt kontrollerad: 2026-11-23. Detta dokument skiljer mellan kontroller som faktiskt har körts och sådant som fortfarande kräver mänsklig eller juridisk verifiering.
 
-## Verifierat i Supabase – 2026-11-06
+## Status: kontrollerad pilot är inte ännu godkänd
 
-Följande kontroller har körts och resultaten har rapporterats:
-- [x] RLS aktiverat på samtliga 16 publika tabeller.
-- [x] Inga anonyma tabellbehörigheter kvar efter att SELECT på audit_events återkallats.
-- [x] Inga publika funktioner med EXECUTE för rollen anon.
-- [x] De tre dataskyddstabellerna privacy_requests, privacy_records och audit_events finns och har RLS.
-- [x] generate_request_matches(uuid) är SECURITY DEFINER, har tom search_path, kräver admin och filtrerar på people.status = 'active'.
-- [x] audit_events ger authenticated endast SELECT; anon har ingen behörighet.
+Publik intresseanmälan är avsiktligt stängd. Ingen publik registrering eller kundförfrågan ska aktiveras innan alla blockerande punkter nedan är klara.
 
-Detta är en grundläggande teknisk kontroll, inte en fullständig penetrationstestning, behörighetsrevision eller ett juridiskt GDPR-godkännande.
+## Genomfört och verifierat tekniskt
 
-## Vad som faktiskt finns i appen
+- [x] 29 av 29 tabeller i `public` har RLS aktiverat.
+- [x] 0 av 29 publika tabeller har anonym SELECT/INSERT/UPDATE/DELETE-behörighet.
+- [x] 0 publika SECURITY DEFINER-funktioner kan köras av rollen `anon`.
+- [x] Publika intags-RPC:er kan inte köras direkt av anon eller vanliga inloggade användare; Edge Function använder server-side service key.
+- [x] Edge Function `public-intake` finns aktiv, men `INTAKE_ENABLED = false`.
+- [x] Webbplatsens `PUBLIC_INTAKE_ENDPOINT` är tom. Formulären skickar därför inte personuppgifter.
+- [x] Företagsansökningar är endast åtkomliga för plattformsadministratör via RLS. Ingen direkt anonym åtkomst.
+- [x] Adminvyn har flik för företagsintresse, statusgranskning och intern granskningsanteckning. Godkänd status skapar inte automatiskt konto.
+- [x] Adminvyn kan registrera och uppdatera GDPR-rättighetsärenden.
+- [x] Databasen har metadata-baserad audit-logg med 13 triggers, inklusive CRM och företagsansökningar.
+- [x] Tenant-organisationens SELECT-policy har korrigerats så att aktiv medlemsrad jämförs mot organisationens faktiska ID.
+- [x] CRM-uppdateringar låser skaparattribution till aktuell användare.
+- [x] Supabase Security Advisor visar inga anon-exekverbara SECURITY DEFINER-funktioner och inga publika tabeller utan RLS.
 
-- [x] Publik informationssida med beskrivning av NÄTVERKET och tjänsteområden.
-- [x] Separat adminväg via `/?admin=1`.
-- [x] Admininloggning via Supabase Auth och kontroll av adminroll i profiles.
-- [x] Adminvyer för personer, kunder, företag, uppdrag och matchningar.
-- [x] Matchningsvyn anropar Supabase RPC.
-- [ ] Publika formulär för kundförfrågan och intresseanmälan.
-- [ ] Server-side intake med validering, spam-/rate-limit-skydd och säker hantering.
-- [ ] Adminvyer för GDPR-ärenden, revisionslogg, uppföljningar, tilldelningar och provisioner.
-- [ ] Test av flöden med admin, vanligt konto och utloggad besökare.
-- [ ] Säkerhetskopiering och återställning testad.
-- [ ] Juridiska texter färdigställda med verkliga företags- och kontaktuppgifter.
-- [ ] Dokumenterat acceptanstest på mobil och dator.
+## Kvarvarande tekniska kontroller före pilot
 
-## Nästa arbetsfaser – samla arbetet i större leveranser
+- [ ] Testa med två separata företagskonton och två organisationer: konto A får aldrig läsa, ändra eller se konto B:s kontakter, affärer, aktiviteter eller uppgifter.
+- [ ] Testa rollerna owner, admin, member och viewer med riktiga testkonton.
+- [ ] Testa administratörsinloggning, utloggning, lösenordsåterställning, e-postbekräftelse och sessionsutgång.
+- [ ] Aktivera MFA för administratörskontot där det stöds.
+- [ ] Granska de åtta avsiktligt exponerade SECURITY DEFINER-funktionerna. De nuvarande funktionerna har admin-kontroller, men detta ska testas med vanligt konto innan pilot.
+- [ ] Slutför test av formulärens server-side validering, honeypot, storleksgräns, CORS och rate-limit innan intaget öppnas. Rate-limit behöver testas även vid samtidiga anrop.
+- [ ] Kontrollera att endast publishable/anon-nyckel finns i klientkod. Service-role/secret får endast finnas som server-side secret.
+- [ ] Verifiera Vercel-deploy, domän, HTTPS, mobil och desktop i riktiga webbläsare. GitHub-commit är inte i sig bevis på lyckad Vercel-deploy.
+- [ ] Säkerhetskopiera databasen och genomför dokumenterat återställningstest.
+- [ ] Kontrollera loggning, incidentlarm, kontaktvägar och vem som bevakar inkomna ansökningar.
 
-### Fas 1 – fungerande intag från publika webbplatsen
-1. Bygg två tydliga publika flöden: "Jag behöver hjälp" och "Jag söker jobb eller uppdrag".
-2. Skicka formulärdata via en server-side Supabase Edge Function; ge aldrig anon direkt INSERT/SELECT i registertabellerna.
-3. Lägg till validering, honeypot och lämpligt spam-/rate-limit-skydd.
-4. Spara minsta nödvändiga uppgifter och visa tydlig bekräftelse utan att exponera interna register.
-5. Lägg till inkomna förfrågningar i adminflödet med status "ny".
+## Supabase-varningar som kräver beslut
 
-### Fas 2 – komplett adminflöde
-1. Lägg till adminvyer för uppföljningar, tilldelningar, provisioner och dataskyddsärenden.
-2. Visa revisionslogg skrivskyddat.
-3. Förbättra matchningshantering: godkänna kontakt, registrera svar och följa status.
-4. Lägg till redigering, arkivering och kontrollerad radering där det behövs.
+- [ ] Leaked Password Protection är avstängt. Supabase dokumenterar att skyddet mot kända läckta lösenord kräver Pro-plan eller högre. Aktivera om planen redan stöder det; uppgradera inte utan kostnadsbeslut.
+- [ ] Security Advisor varnar för åtta SECURITY DEFINER-funktioner som kan anropas av authenticated. Funktionerna är avsedda för adminflödet och innehåller admin-kontroller. De ska testas med vanligt konto och dokumenteras; varningen är inte ett bevis på sårbarhet men får inte ignoreras.
+- [ ] `public_intake_rate_limits` har RLS och saknar policyer/klientbehörigheter avsiktligt. Endast server-side service role ska använda tabellen.
 
-### Fas 3 – GDPR och juridik
-1. Fastställ personuppgiftsansvarig och kontaktuppgifter.
-2. Dokumentera ändamål, rättslig grund per flöde, datakategorier, mottagare/biträden, överföringar och lagringstider.
-3. Färdigställ integritetspolicy, cookiebedömning och villkor efter beslutad affärsmodell.
-4. Bygg och testa processer för registerutdrag, rättelse, radering, begränsning, invändning och dataportabilitet där tillämpligt.
-5. Dokumentera incidentrutin, backup/återställning och bedömning av DPIA.
-6. Låt juridiska texter och ansvarsfördelning granskas innan publik lansering.
+## GDPR och juridik – blockerar publik registrering
 
-### Fas 4 – kvalitetssäkring och lansering
-1. Testa samtliga flöden på mobil och dator.
-2. Testa behörigheter med admin, vanligt inloggat konto och utloggad besökare.
-3. Kontrollera att endast anon/publishable key finns i webbläsaren. service_role får endast finnas som server-side secret.
-4. Genomför dokumenterad acceptans- och återställningstest.
-5. Öppna publik registrering först när samtliga lanseringskrav är uppfyllda.
+Följande uppgifter kan inte fyllas i korrekt genom kod utan beslut från verksamheten:
 
-## GDPR – miniminivå
+- [ ] Fastställ vilken juridisk person som är personuppgiftsansvarig och dess fullständiga namn.
+- [ ] Fastställ offentlig kontaktadress för dataskyddsfrågor och postadress.
+- [ ] Dokumentera ändamål och rättslig grund separat för företagsintresse, kundförfrågningar, leverantörsprofiler, CRM, matchning, marknadsföring och nyhetsbrev.
+- [ ] Bestäm lagringstid/gallringsregel för varje kategori och hur gallring genomförs.
+- [ ] Lista personuppgiftsbiträden och underbiträden (hosting, databas, e-post, analys, support), var data behandlas och eventuella tredjelandsöverföringar.
+- [ ] Teckna/granska personuppgiftsbiträdesavtal där det behövs.
+- [ ] Färdigställ integritetspolicy med registrerades rättigheter, klagomål till IMY, mottagare, överföringar och lagringstider.
+- [ ] Färdigställ villkor och ansvarsfördelning för förmedlingsmodellen. Granska konsumentinformation, avtalspart, avgifter, avbokning, reklamation, försäkring, tillstånd, skatt och RUT/ROT-information.
+- [ ] Bedöm cookies, lokal lagring, analys och eventuella spårningstekniker. Lägg bara till samtyckesbanner om icke-nödvändiga cookies/spårning faktiskt används.
+- [ ] Dokumentera incidentrutin, register över behandlingar och bedöm om DPIA krävs.
+- [ ] Låt integritetspolicy och användarvillkor granskas juridiskt innan publik lansering.
 
-- Samla bara in uppgifter som behövs för ett tydligt ändamål.
-- Informera innan uppgifter samlas in; skilj mellan nödvändig behandling och frivillig marknadsföring.
-- Använd inte samtycke slentrianmässigt när annan rättslig grund är korrekt.
-- Bestäm gallringsfrister och radera/anonymisera uppgifter när de inte längre behövs.
-- Begränsa åtkomst enligt minsta privilegium och logga relevanta administrativa åtgärder.
-- Ha process för registrerades rättigheter och incidenthantering.
-- Bedöm om konsekvensbedömning (DPIA) krävs innan mer omfattande eller riskfylld behandling.
+## Pilotupplägg som rekommenderas
+
+1. Börja med en sluten pilot för ett fåtal företag som kontaktas manuellt.
+2. Ta emot företagsintresse först när integritetstext, rättslig grund, lagring och server-side rate-limit är färdiga.
+3. Granska företagen manuellt och verifiera kontaktperson/bolag innan konto skapas.
+4. Skapa företagskonto och medlemskap manuellt. Ingen självregistrering eller automatiskt godkännande i första piloten.
+5. Testa två separata företag och dokumentera att dataisoleringen fungerar.
+6. Öppna därefter för en begränsad pilot. Publik kund-/personregistrering och betalningar är separata beslut.
 
 ## Viktigt
 
-Databastabeller för dataskydd är stöd för en process, inte en färdig GDPR-process i sig. Detta dokument är en teknisk och operativ plan, inte juridisk rådgivning eller ett intyg om GDPR-efterlevnad. Använd inte riktiga personuppgifter eller öppna publik registrering förrän relevanta säkerhets-, drift- och dataskyddskrav är testade.
+Tekniska kontroller är inte juridiskt GDPR-godkännande, penetrationstest eller garanti för felfri drift. Öppna inte formulär och lägg inte in riktiga personuppgifter förrän blockerande punkter är genomförda.
