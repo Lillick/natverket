@@ -30,3 +30,11 @@ Publika intag ska hållas avstängda tills samtliga krav ovan är verifierade. D
 - [x] Behörighetskontroll visar EXECUTE=false för anon och authenticated och EXECUTE=true för service_role på samtliga tre intagsfunktioner.
 - [x] Edge Function v9 verifierades aktiv med INTAKE_ENABLED=false.
 - [ ] End-to-end-test via webbläsare och verkliga testkonton återstår innan öppning.
+
+Ytterligare åtkomsttest:
+- [x] Simulerad authenticated-session med icke-admin JWT-sub gav is_admin=false.
+- [x] De åtta befintliga adminfunktionerna avvisade icke-admin-sessionen eller returnerade inga rader.
+- [x] Samma icke-admin-session såg 0 rader i profiles, customers, requests, people, service_profiles, privacy_records, privacy_requests, audit_events och admin_notifications. company_applications nekades redan på tabellbehörighet.
+- [x] Adminprofilens id gav is_admin=true i en separat simulerad session.
+- [x] Kontroll efter rollback: 0 testposter kvar i company_applications, customers, people, privacy_records och admin_notifications.
+- [x] Databasfunktionerna kräver nu uttrycklig legal basis; NULL legal basis avvisas.
