@@ -100,7 +100,7 @@ Följande har verifierats direkt mot anslutet GitHub- och Supabase-projekt. Dett
 - [ ] Juridisk identitet, personuppgiftsansvarig, kontaktuppgifter, rättsliga grunder, lagringstider, biträden/överföringar och slutliga villkor måste fastställas före personuppgiftsinsamling.
 
 ### Ändringar i arbetsgrenen `launch-readiness`
-- [x] Supabase Edge Function-källan i GitHub har synkroniserats mot den aktiva version 8, så att kodbasen inte längre ligger efter den driftsatta funktionen.
+- [x] Supabase Edge Function-källan i GitHub har synkroniserats mot den aktiva version 9, så att kodbasen inte längre ligger efter den driftsatta funktionen.
 - [x] `vercel.json` har lagts till med grundläggande säkerhetsheaders: nosniff, frame-deny, strikt referrer policy, begränsad Permissions-Policy och HSTS.
 - [ ] Ändringarna är ännu inte mergade till `main` eller verifierade i Vercel Production.
 
