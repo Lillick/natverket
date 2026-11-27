@@ -92,7 +92,8 @@ async function loadMembership(){
  if(error){setMsg("loginMsg","Kunde inte läsa företagsbehörigheten. Kontakta NÄTVERKET.");return}
  if(!data?.length){await db.auth.signOut();setMsg("loginMsg","Kontot har ännu inget aktivt företagsutrymme. Kontakta NÄTVERKET.");return}
  if(data.length>1){setMsg("loginMsg","Kontot har fler än ett företagsutrymme. Kontakta supporten så väljer vi rätt arbetsyta.");await db.auth.signOut();return}
- if(!["owner","admin"].includes(data[0].member_role)){location.href="/personal.html";return}\n org=data[0].organization_id;$("orgName").textContent=data[0].tenant_organizations?.display_name||"Företagets arbetsyta";
+ if(!["owner","admin"].includes(data[0].member_role)){location.href="/personal.html";return}
+ org=data[0].organization_id;$("orgName").textContent=data[0].tenant_organizations?.display_name||"Företagets arbetsyta";
  $("login").classList.add("hidden");$("workspace").classList.remove("hidden");await refreshAll();
 }
 async function logout(){await db.auth.signOut();user=null;org=null;location.reload()}
